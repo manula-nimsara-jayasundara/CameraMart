@@ -124,6 +124,7 @@ public class Invoice extends javax.swing.JFrame {
 
             if (balance < 0) {
                 payBill.setEnabled(false);
+                payField.setEnabled(true);
             } else {
                 payBill.setEnabled(true);
             }
@@ -136,6 +137,7 @@ public class Invoice extends javax.swing.JFrame {
             payField.setText(String.valueOf(payment));
             payField.setEditable(false);
             payBill.setEnabled(true);
+            balField.setEnabled(false);
         }
 
         balField.setText(String.valueOf(balance));
@@ -162,7 +164,7 @@ public class Invoice extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         stkLable = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        seleStock = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         qtyField = new javax.swing.JFormattedTextField();
         jLabel10 = new javax.swing.JLabel();
@@ -246,13 +248,13 @@ public class Invoice extends javax.swing.JFrame {
 
         stkLable.setText(".............................................");
 
-        jButton2.setBackground(new java.awt.Color(0, 102, 204));
-        jButton2.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Select a Stock");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        seleStock.setBackground(new java.awt.Color(0, 102, 204));
+        seleStock.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
+        seleStock.setForeground(new java.awt.Color(255, 255, 255));
+        seleStock.setText("Select a Stock");
+        seleStock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                seleStockActionPerformed(evt);
             }
         });
 
@@ -261,6 +263,11 @@ public class Invoice extends javax.swing.JFrame {
 
         qtyField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         qtyField.setText("0");
+        qtyField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                qtyFieldKeyPressed(evt);
+            }
+        });
 
         jLabel10.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
         jLabel10.setText("Brand");
@@ -324,7 +331,7 @@ public class Invoice extends javax.swing.JFrame {
                             .addComponent(jLabel8)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                             .addComponent(stkLable, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(seleStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(pName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel9)
@@ -351,7 +358,7 @@ public class Invoice extends javax.swing.JFrame {
                             .addComponent(jLabel8)
                             .addComponent(stkLable))
                         .addGap(30, 30, 30)
-                        .addComponent(jButton2)
+                        .addComponent(seleStock)
                         .addGap(30, 30, 30)
                         .addComponent(pName))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -541,11 +548,11 @@ public class Invoice extends javax.swing.JFrame {
 
     }//GEN-LAST:event_cusMobFieldKeyPressed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void seleStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seleStockActionPerformed
         Stock stock = new Stock();
         stock.setVisible(true);
         stock.setInvoice(this);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_seleStockActionPerformed
 
     private void addInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addInvoiceActionPerformed
         invId();
@@ -593,7 +600,7 @@ public class Invoice extends javax.swing.JFrame {
                 MySQL.executeIUD("INSERT INTO `invoice_item` (`qty`,`stock_id`,`invoice_id`) "
                         + "VALUES ('" + qty + "','" + stock + "','" + invoice_id + "')");
 
-                reset();
+                resetIn();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -608,10 +615,10 @@ public class Invoice extends javax.swing.JFrame {
     private void payBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payBillActionPerformed
         String invoice_id = inIdLable.getText();
 
-        if (payment == 0) {
+        if (total == 0) {
             JOptionPane.showMessageDialog(this, "Please Add invoice first!", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (invoice_id.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please ontact your developers!", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please contact your developers!", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
             if (discount > 0) {
                 total = total - discount;
@@ -622,7 +629,7 @@ public class Invoice extends javax.swing.JFrame {
                     MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
                             + "WHERE `id`='" + invoice_id + "'");
                     JOptionPane.showMessageDialog(this, "Paid!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
+                    resetP();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -634,7 +641,7 @@ public class Invoice extends javax.swing.JFrame {
                     MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
                             + "WHERE `id`='" + invoice_id + "'");
                     JOptionPane.showMessageDialog(this, "Paid!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
+                    resetP();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -666,6 +673,18 @@ public class Invoice extends javax.swing.JFrame {
         calculate();
     }//GEN-LAST:event_pMComboItemStateChanged
 
+    private void qtyFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_qtyFieldKeyPressed
+        qtyField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cusMobField.grabFocus();
+            }
+
+        });
+
+
+    }//GEN-LAST:event_qtyFieldKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -689,7 +708,6 @@ public class Invoice extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField discField;
     private javax.swing.JLabel emName;
     private javax.swing.JLabel inIdLable;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -715,12 +733,13 @@ public class Invoice extends javax.swing.JFrame {
     private javax.swing.JButton payBill;
     private javax.swing.JFormattedTextField payField;
     private javax.swing.JFormattedTextField qtyField;
+    private javax.swing.JButton seleStock;
     private javax.swing.JFormattedTextField sellPFild;
     private javax.swing.JLabel stkLable;
     private javax.swing.JFormattedTextField totField;
     // End of variables declaration//GEN-END:variables
 
-    private void reset() {
+    private void resetIn() {
         qtyField.setText("0");
         cusMobField.setText("");
         stkLable.setText(".............................................");
@@ -728,5 +747,13 @@ public class Invoice extends javax.swing.JFrame {
         sellPFild.setText("");
         pName.setText("Product Name");
         qtyField.grabFocus();
+    }
+
+    private void resetP() {
+        totField.setText("0.00");
+        discField.setText("0.00");
+        pMCombo.setSelectedItem("Cash");
+        payField.setText("0.00");
+        balField.setText("0.00");
     }
 }
