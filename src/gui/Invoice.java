@@ -82,6 +82,66 @@ public class Invoice extends javax.swing.JFrame {
         }
     }
 
+    private double discount = 0;
+    private double payment = 0;
+    private String paymentMethod = "Select";
+    private double balance = 0;
+
+    private void calculate() {
+
+        //settings
+        if (discField.getText().isEmpty()) {
+            discount = 0;
+        } else {
+            discount = Double.parseDouble(discField.getText());
+        }
+
+        if (payField.getText().isEmpty()) {
+            payment = 0;
+            JOptionPane.showMessageDialog(this, "Payment Field is Empty! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+            payment = Double.parseDouble(payField.getText());
+        }
+
+        total = Double.parseDouble(totField.getText());
+
+        paymentMethod = String.valueOf(pMCombo.getSelectedItem());
+        //settings
+
+        total -= discount;
+
+        if (total < 0) {
+
+            JOptionPane.showMessageDialog(this, "Total Field is Empty! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+
+        }
+
+        if (paymentMethod.equals("Cash")) {
+            //cash
+            payField.setEditable(true);
+            balance = payment - total;
+
+            if (balance < 0) {
+                payBill.setEnabled(false);
+            } else {
+                payBill.setEnabled(true);
+            }
+
+        } else {
+            //card
+            payField.setEnabled(false);
+            payment = total;
+            balance = 0;
+            payField.setText(String.valueOf(payment));
+            payField.setEditable(false);
+            payBill.setEnabled(true);
+        }
+
+        balField.setText(String.valueOf(balance));
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -359,6 +419,11 @@ public class Invoice extends javax.swing.JFrame {
         jLabel15.setText("Payment meth.");
 
         pMCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        pMCombo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                pMComboItemStateChanged(evt);
+            }
+        });
 
         balField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
         balField.setText("0.00");
@@ -368,6 +433,11 @@ public class Invoice extends javax.swing.JFrame {
 
         discField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         discField.setText("0.00");
+        discField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                discFieldKeyReleased(evt);
+            }
+        });
 
         jLabel13.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
         jLabel13.setText("Total");
@@ -536,19 +606,16 @@ public class Invoice extends javax.swing.JFrame {
     }//GEN-LAST:event_addInvoiceActionPerformed
 
     private void payBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payBillActionPerformed
-        double discount = Double.parseDouble(discField.getText());
-        double payment = Double.parseDouble(payField.getText());
-        double balence = Double.parseDouble(balField.getText());
         String invoice_id = inIdLable.getText();
 
         if (payment == 0) {
-            JOptionPane.showMessageDialog(this, "Please Enter Payment!", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please Add invoice first!", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (invoice_id.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please ontact your developers!", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
             if (discount > 0) {
                 total = total - discount;
-                balence = payment - total;
+                balance = payment - total;
 
                 try {
 
@@ -561,7 +628,7 @@ public class Invoice extends javax.swing.JFrame {
                 }
 
             } else {
-                balence = payment - total;
+                balance = payment - total;
                 try {
 
                     MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
@@ -578,18 +645,26 @@ public class Invoice extends javax.swing.JFrame {
     }//GEN-LAST:event_payBillActionPerformed
 
     private void payFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_payFieldKeyReleased
-        double discount = Double.parseDouble(discField.getText());
-        double payment = Double.parseDouble(payField.getText());
-        double balence = 0;
-        String invoice_id = inIdLable.getText();
+//        double discount = Double.parseDouble(discField.getText());
+//        double payment = Double.parseDouble(payField.getText());
+//        double balence = 0;
+//        String invoice_id = inIdLable.getText();
+//
+//        total = total - discount;
+//        balence = payment - total;
 
-        
-        
-        total = total - discount;
-        balence = payment - total;
+        calculate();
 
 
     }//GEN-LAST:event_payFieldKeyReleased
+
+    private void discFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_discFieldKeyReleased
+        calculate();
+    }//GEN-LAST:event_discFieldKeyReleased
+
+    private void pMComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_pMComboItemStateChanged
+        calculate();
+    }//GEN-LAST:event_pMComboItemStateChanged
 
     /**
      * @param args the command line arguments
