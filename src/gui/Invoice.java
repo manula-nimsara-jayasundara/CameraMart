@@ -18,6 +18,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -33,8 +34,9 @@ public class Invoice extends javax.swing.JFrame {
     public Invoice() {
         initComponents();
         emName.setText(LogIn.getEmployeeName());
-
+        invId();
         loadPaymentMeths();
+        loadInvoiceItems();
     }
     double total = 0;
     double totI = 0;
@@ -44,7 +46,6 @@ public class Invoice extends javax.swing.JFrame {
         String invExt = "CM_IN";
         String invoiceId = invExt + invGenId;
         inIdLable.setText(invoiceId);
-
     }
 
     public JLabel getStkLable() {
@@ -82,10 +83,36 @@ public class Invoice extends javax.swing.JFrame {
         }
     }
 
+    public void loadInvoiceItems() {
+        try {
+
+            String invoiceId = inIdLable.getText();
+
+            ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `stock` "
+                    + "INNER JOIN `product` ON `stock`.`product_id`=`product`.`id`");
+
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+
+            while (resultSet.next()) {
+                Vector<String> vector = new Vector<>();
+                vector.add(resultSet.getString("product.id"));
+                vector.add(resultSet.getString("product.name"));
+                vector.add(resultSet.getString("stock.qty"));
+
+                model.addRow(vector);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private double discount = 0;
     private double payment = 0;
     private String paymentMethod = "Select";
     private double balance = 0;
+    private int qty = 0;
 
     private void calculate() {
 
@@ -382,7 +409,7 @@ public class Invoice extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Invoice ID", "Product", "Quantity", "Total"
+                "Product ID", "Product", "Quantity", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -555,11 +582,10 @@ public class Invoice extends javax.swing.JFrame {
     }//GEN-LAST:event_seleStockActionPerformed
 
     private void addInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addInvoiceActionPerformed
-        invId();
-        String empEmail = LogIn.getEmployeeEmail();
 
+        String empEmail = LogIn.getEmployeeEmail();
+        qty = Integer.parseInt(qtyField.getText());
         String invoice_id = inIdLable.getText();
-        int qty = Integer.parseInt(qtyField.getText());
         String customer = cusMobField.getText();
         String stock = stkLable.getText();
         String brand = brLable.getText();
@@ -594,10 +620,10 @@ public class Invoice extends javax.swing.JFrame {
 
             try {
 
-                MySQL.executeIUD("INSERT INTO `invoice` (`id`,`date_time`,`payment_method_id`,`customer_mobile`) VALUES ('" + invoice_id + "',"
+                MySQL.executeIUD("INSERT INTO `invoice` (`invo`,`date_time`,`payment_method_id`,`customer_mobile`) VALUES ('" + invoice_id + "',"
                         + "'" + date_time + "','" + paymentMethodsMap.get(payMeth) + "','" + customer + "')");
 
-                MySQL.executeIUD("INSERT INTO `invoice_item` (`qty`,`stock_id`,`invoice_id`) "
+                MySQL.executeIUD("INSERT INTO `invoice_item` (`qty`,`stock_id`,`invoice_invo`) "
                         + "VALUES ('" + qty + "','" + stock + "','" + invoice_id + "')");
 
                 resetIn();
@@ -627,9 +653,10 @@ public class Invoice extends javax.swing.JFrame {
                 try {
 
                     MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
-                            + "WHERE `id`='" + invoice_id + "'");
+                            + "WHERE `invo`='" + invoice_id + "'");
                     JOptionPane.showMessageDialog(this, "Paid!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     resetP();
+                    resetIn();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -639,9 +666,10 @@ public class Invoice extends javax.swing.JFrame {
                 try {
 
                     MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
-                            + "WHERE `id`='" + invoice_id + "'");
+                            + "WHERE `invo`='" + invoice_id + "'");
                     JOptionPane.showMessageDialog(this, "Paid!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     resetP();
+                    resetIn();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
