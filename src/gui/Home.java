@@ -6,6 +6,8 @@ package gui;
 
 import model.MySQL;
 import java.sql.ResultSet;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,23 +22,52 @@ public class Home extends javax.swing.JFrame {
         initComponents();
         empEmail.setText(email);
         empName.setText(fname + " " + lname);
-        
+        loadAvStock();
         loadJobRole();
     }
-    
+
     private void loadJobRole() {
         try {
-            
+
             ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `employee` "
                     + "INNER JOIN `employee_type` ON `employee_type`.`id`=`employee`.`employee_type_id` WHERE `email`='" + empEmail.getText() + "'");
-            
+
             if (resultSet.next()) {
                 String jobRole = resultSet.getString("name");
-                
+
                 empJob.setText(jobRole);
-                
+
             }
-            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadAvStock() {
+        try {
+
+            ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `stock` "
+                    + "INNER JOIN `product` ON `product`.`id`=`stock`.`product_id` "
+                    + "INNER JOIN `brand` ON `brand`.`id`=`product`.`brand_id` "
+                    + "INNER JOIN `category` ON `category`.`id`=`product`.`category_id`");
+
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+
+            while (resultSet.next()) {
+                Vector<String> vector = new Vector<>();
+                vector.add(resultSet.getString("stock.id"));
+                vector.add(resultSet.getString("product.id"));
+                vector.add(resultSet.getString("product.name"));
+                vector.add(resultSet.getString("brand.name"));
+                vector.add(resultSet.getString("category.category"));
+                vector.add(resultSet.getString("stock.qty"));
+                vector.add(resultSet.getString("stock.price"));
+
+                model.addRow(vector);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,9 +219,18 @@ public class Home extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Stock ID", "Product ID", "Product Name", "Brand", "Category", "QTY", "Price"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -269,7 +309,7 @@ public class Home extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         EmployeeRegistration empReg = new EmployeeRegistration();
         empReg.setVisible(true);
 
