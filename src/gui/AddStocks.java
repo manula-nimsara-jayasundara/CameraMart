@@ -38,8 +38,6 @@ public class AddStocks extends javax.swing.JFrame {
         empEmail.setText(email);
     }
 
-    
-
     /**
      * Creates new form AddProducts
      */
@@ -55,17 +53,14 @@ public class AddStocks extends javax.swing.JFrame {
         loadStock();
         upStkBtn.setEnabled(false);
     }
-    
-    
+
     public JButton getSelectDeBtn() {
         return selectDeBtn;
     }
-    
-    public JLabel getJLable3(){
+
+    public JLabel getJLable3() {
         return jLabel3;
     }
-    
-    
 
     private void loadStock() {
         try {
@@ -619,12 +614,24 @@ public class AddStocks extends javax.swing.JFrame {
     private void printBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printBtnActionPerformed
         try {
 
-            ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `employee`");
+            ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `stock` "
+                    + "INNER JOIN `product` ON `stock`.`product_id`=`product`.`id` "
+                    + "INNER JOIN `brand` ON `product`.`brand_id`=`brand`.`id` "
+                    + "INNER JOIN `category` ON `product`.`category_id`=`category`.`id`");
 
-            String path = "src/reports/invoiceCameraMart.jasper";
-
+            String path = "src/reports/StockReportCameraMart.jasper";
             HashMap<String, Object> para = new HashMap<>();
-            para.put("Parameter1", empName.getText());
+            while (resultSet.next()) {
+
+                para.put("Parameter1", empName.getText());
+                para.put("COLUMN_0", resultSet.getString("stock.id"));
+                para.put("COLUMN_1", resultSet.getString("product.id"));
+                para.put("COLUMN_2", resultSet.getString("product.name"));
+                para.put("COLUMN_3", resultSet.getString("brand.name"));
+                para.put("COLUMN_4", resultSet.getString("category.category"));
+                para.put("COLUMN_5", resultSet.getString("stock.price"));
+                para.put("COLUMN_6", resultSet.getString("stock.qty"));
+            }
 
             JRTableModelDataSource dataSource = new JRTableModelDataSource(jTable1.getModel());
 
