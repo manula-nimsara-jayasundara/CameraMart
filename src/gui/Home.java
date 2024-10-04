@@ -21,7 +21,7 @@ public class Home extends javax.swing.JFrame {
     public Home(String email, String fname, String lname) {
         initComponents();
         empEmail.setText(email);
-        empName.setText(fname + " " + lname);
+        empName.setText(fname + " " + lname);        
         loadAvStock();
         loadJobRole();
     }

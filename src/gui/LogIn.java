@@ -17,7 +17,7 @@ import java.sql.ResultSet;
  */
 public class LogIn extends javax.swing.JFrame {
 
-    private static String employeeName;
+    public static String employeeName;
 
     public static String getEmployeeName() {
         return employeeName;
@@ -35,6 +35,12 @@ public class LogIn extends javax.swing.JFrame {
 
     public static void setEmployeeEmail(String employeeEmail) {
         LogIn.employeeEmail = employeeEmail;
+    }
+
+    public static String employeeJob;
+
+    public static String setEmployeeJob() {
+        return employeeJob;
     }
 
     /**
@@ -217,13 +223,16 @@ public class LogIn extends javax.swing.JFrame {
 
             try {
 
-                ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `employee` WHERE `email` = '" + email + "' AND `password`='" + password + "'");
+                ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `employee` INNER JOIN `employee_type` ON "
+                        + "`employee`.`employee_type_id`=`employee_type`.`id`"
+                        + " WHERE `email` = '" + email + "' AND `password`='" + password + "'");
 
                 if (resultSet.next()) {
 
                     String fName = resultSet.getString("first_name");
                     String lName = resultSet.getString("last_name");
                     String empName = fName + " " + lName;
+                    employeeJob = resultSet.getString("employee_type.name");
 
                     Home home = new Home(email, fName, lName);
                     home.setVisible(true);
