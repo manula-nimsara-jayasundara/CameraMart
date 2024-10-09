@@ -75,10 +75,11 @@ public class Dealers extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Parchment", 1, 48)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Ravie", 1, 24)); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/camera.png"))); // NOI18N
         jLabel1.setText("Camera Mart");
 
-        jLabel2.setFont(new java.awt.Font("Quicksand", 1, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Stencil", 2, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 204, 204));
         jLabel2.setText("Dealers");
 
@@ -90,7 +91,7 @@ public class Dealers extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
         jPanel1Layout.setVerticalGroup(

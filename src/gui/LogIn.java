@@ -116,11 +116,11 @@ public class LogIn extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Poppins", 1, 24)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Stencil", 2, 24)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("LogIn");
 
-        jLabel5.setFont(new java.awt.Font("Parchment", 1, 48)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Ravie", 1, 20)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/camera.png"))); // NOI18N
         jLabel5.setText("Camera Mart");

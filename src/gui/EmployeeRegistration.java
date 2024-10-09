@@ -150,7 +150,7 @@ public class EmployeeRegistration extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Poppins", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Stencil", 2, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 204, 153));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Employee Registration");
@@ -371,7 +371,7 @@ public class EmployeeRegistration extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel11.setFont(new java.awt.Font("Parchment", 1, 48)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Ravie", 1, 24)); // NOI18N
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/camera.png"))); // NOI18N
         jLabel11.setText("Camera Mart");

@@ -25,8 +25,11 @@ import javax.swing.table.DefaultTableModel;
  * @author Manula
  */
 public class Invoice extends javax.swing.JFrame {
-
+    
     HashMap<String, String> paymentMethodsMap = new HashMap<>();
+    HashMap<String, String> invoiceItemMap = new HashMap<>();
+    private Object payMeth;
+    private Vector<?> rowData;
 
     /**
      * Creates new form Invoice
@@ -34,86 +37,94 @@ public class Invoice extends javax.swing.JFrame {
     public Invoice() {
         initComponents();
         emName.setText(LogIn.getEmployeeName());
+        
         invId();
         loadPaymentMeths();
-        loadInvoiceItems();
+        
     }
     double total = 0;
     double totI = 0;
-
+    
     public void invId() {
         String invGenId = String.valueOf(System.currentTimeMillis());
         String invExt = "CM_IN";
         String invoiceId = invExt + invGenId;
         inIdLable.setText(invoiceId);
     }
-
+    
     public JLabel getStkLable() {
         return stkLable;
     }
-
+    
     public JLabel getBrLable() {
         return brLable;
     }
-
+    
     public JTextField getSellPField() {
         return sellPFild;
     }
-
+    
     public JLabel getPName() {
         return pName;
     }
-
+    
     public void loadPaymentMeths() {
         try {
-
+            
             ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `payment_method`");
-
+            
             Vector<String> vector = new Vector<>();
             while (resultSet.next()) {
                 vector.add(resultSet.getString("payment_method"));
                 paymentMethodsMap.put(resultSet.getString("payment_method"), resultSet.getString("id"));
             }
-
+            
             DefaultComboBoxModel model = new DefaultComboBoxModel(vector);
             pMCombo.setModel(model);
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    
     public void loadInvoiceItems() {
         try {
-
+            
             String invoiceId = inIdLable.getText();
-
+            
             ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `stock` "
-                    + "INNER JOIN `product` ON `stock`.`product_id`=`product`.`id`");
-
+                    + "INNER JOIN `product` ON `stock`.`product_id`=`product`.`id` "
+                    + "INNER JOIN `invoice_item` ON `invoice_item`.`stock_id`=`stock`.`id` "
+                    + "INNER JOIN `invoice` ON `invoice`.`invo`=`invoice_item`.`invoice_invo` WHERE `invoice`.`invo`='" + invoiceId + "'");
+            
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
-
+            
             while (resultSet.next()) {
+                int qtyI = Integer.parseInt(resultSet.getString("invoice_item.qty"));
+                double sellPrice = Double.parseDouble(resultSet.getString("stock.price"));
                 Vector<String> vector = new Vector<>();
+                vector.add(invoiceId);
                 vector.add(resultSet.getString("product.id"));
                 vector.add(resultSet.getString("product.name"));
-                vector.add(resultSet.getString("stock.qty"));
-
+                vector.add(resultSet.getString("invoice_item.qty"));
+                vector.add(String.valueOf(sellPrice * qtyI));
+                
+                
                 model.addRow(vector);
             }
-
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    
     private double discount = 0;
     private double payment = 0;
     private String paymentMethod = "Select";
     private double balance = 0;
-    private int qty = 0;
-
+    int qty = 0;
+    
     private void calculate() {
 
         //settings
@@ -122,40 +133,40 @@ public class Invoice extends javax.swing.JFrame {
         } else {
             discount = Double.parseDouble(discField.getText());
         }
-
+        
         if (payField.getText().isEmpty()) {
             payment = 0;
             JOptionPane.showMessageDialog(this, "Payment Field is Empty! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
             payment = Double.parseDouble(payField.getText());
         }
-
+        
         total = Double.parseDouble(totField.getText());
-
+        
         paymentMethod = String.valueOf(pMCombo.getSelectedItem());
         //settings
 
         total -= discount;
-
+        
         if (total < 0) {
-
+            
             JOptionPane.showMessageDialog(this, "Total Field is Empty! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
-
+            
         }
-
+        
         if (paymentMethod.equals("Cash")) {
             //cash
             payField.setEditable(true);
             balance = payment - total;
-
+            
             if (balance < 0) {
                 payBill.setEnabled(false);
                 payField.setEnabled(true);
             } else {
                 payBill.setEnabled(true);
             }
-
+            
         } else {
             //card
             payField.setEnabled(false);
@@ -166,9 +177,9 @@ public class Invoice extends javax.swing.JFrame {
             payBill.setEnabled(true);
             balField.setEnabled(false);
         }
-
+        
         balField.setText(String.valueOf(balance));
-
+        
     }
 
     /**
@@ -219,21 +230,21 @@ public class Invoice extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel2.setFont(new java.awt.Font("Parchment", 1, 48)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Ravie", 1, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/camera.png"))); // NOI18N
         jLabel2.setText("Camera Mart");
 
-        jLabel3.setFont(new java.awt.Font("Quicksand", 1, 30)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Stencil", 2, 30)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 204, 204));
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/invoice_2474460.png"))); // NOI18N
         jLabel3.setText("INVOICE");
 
         jLabel4.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
-        jLabel4.setText("Job Role -");
+        jLabel4.setText("Employee Name");
 
         emName.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
-        emName.setText("Employee Name");
+        emName.setText("Emp Name");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -242,13 +253,13 @@ public class Invoice extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(emName)
-                .addGap(74, 74, 74))
+                .addGap(31, 31, 31))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -256,10 +267,14 @@ public class Invoice extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel3)
+                    .addComponent(jLabel3))
+                .addContainerGap(18, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(emName))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jLabel1.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
@@ -409,11 +424,11 @@ public class Invoice extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Product ID", "Product", "Quantity", "Total"
+                "Invoice ID", "Product ID", "Product", "Quantity", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -434,7 +449,7 @@ public class Invoice extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addComponent(jLabel7)))
@@ -571,7 +586,7 @@ public class Invoice extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cusMobFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cusMobFieldKeyPressed
-
+        
 
     }//GEN-LAST:event_cusMobFieldKeyPressed
 
@@ -582,7 +597,7 @@ public class Invoice extends javax.swing.JFrame {
     }//GEN-LAST:event_seleStockActionPerformed
 
     private void addInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addInvoiceActionPerformed
-
+        
         String empEmail = LogIn.getEmployeeEmail();
         qty = Integer.parseInt(qtyField.getText());
         String invoice_id = inIdLable.getText();
@@ -592,7 +607,7 @@ public class Invoice extends javax.swing.JFrame {
         String price = sellPFild.getText();
         String proName = pName.getText();
         String payMeth = String.valueOf(pMCombo.getSelectedItem());
-
+        
         if (invoice_id.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please contact your Developers! Because Invoice Id is not generate well.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (qty == 0) {
@@ -610,37 +625,45 @@ public class Invoice extends javax.swing.JFrame {
         } else if (proName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please contact your Developers! Because Product Name is missing.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
-
+            
             totI = qty * Double.parseDouble(price);
-
+            
             total = total + (totI);
             totField.setText(String.valueOf(total));
-
             String date_time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-
+            
             try {
-
-                MySQL.executeIUD("INSERT INTO `invoice` (`invo`,`date_time`,`payment_method_id`,`customer_mobile`) VALUES ('" + invoice_id + "',"
+                
+                MySQL.executeIUD("INSERT INTO `invoice` "
+                        + "(`invo`,`date_time`,`payment_method_id`,`customer_mobile`)"
+                        + " VALUES ('" + invoice_id + "',"
                         + "'" + date_time + "','" + paymentMethodsMap.get(payMeth) + "','" + customer + "')");
-
+                
                 MySQL.executeIUD("INSERT INTO `invoice_item` (`qty`,`stock_id`,`invoice_invo`) "
                         + "VALUES ('" + qty + "','" + stock + "','" + invoice_id + "')");
-
+                
                 resetIn();
+                loadInvoiceItems();
 
+//                if (jTable1.getRowCount() > 0) {
+//                    DefaultTableModel model = (DefaultTableModel) jTable1.();
+//                    model.setRowCount(0);
+//                    loadInvoiceItems();
+//                } else {
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-//            
+            
         }
-
+        
 
     }//GEN-LAST:event_addInvoiceActionPerformed
+    
 
     private void payBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payBillActionPerformed
         String invoice_id = inIdLable.getText();
-
+        
         if (total == 0) {
             JOptionPane.showMessageDialog(this, "Please Add invoice first!", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (invoice_id.isEmpty()) {
@@ -649,9 +672,9 @@ public class Invoice extends javax.swing.JFrame {
             if (discount > 0) {
                 total = total - discount;
                 balance = payment - total;
-
+                
                 try {
-
+                    
                     MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
                             + "WHERE `invo`='" + invoice_id + "'");
                     JOptionPane.showMessageDialog(this, "Paid!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -660,11 +683,11 @@ public class Invoice extends javax.swing.JFrame {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                
             } else {
                 balance = payment - total;
                 try {
-
+                    
                     MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
                             + "WHERE `invo`='" + invoice_id + "'");
                     JOptionPane.showMessageDialog(this, "Paid!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -675,7 +698,7 @@ public class Invoice extends javax.swing.JFrame {
                 }
             }
         }
-
+        
 
     }//GEN-LAST:event_payBillActionPerformed
 
@@ -689,7 +712,7 @@ public class Invoice extends javax.swing.JFrame {
 //        balence = payment - total;
 
         calculate();
-
+        
 
     }//GEN-LAST:event_payFieldKeyReleased
 
@@ -707,9 +730,9 @@ public class Invoice extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 cusMobField.grabFocus();
             }
-
+            
         });
-
+        
 
     }//GEN-LAST:event_qtyFieldKeyPressed
 
@@ -776,7 +799,7 @@ public class Invoice extends javax.swing.JFrame {
         pName.setText("Product Name");
         qtyField.grabFocus();
     }
-
+    
     private void resetP() {
         totField.setText("0.00");
         discField.setText("0.00");

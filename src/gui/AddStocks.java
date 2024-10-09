@@ -55,6 +55,11 @@ public class AddStocks extends javax.swing.JFrame {
         upStkBtn.setEnabled(false);
     }
 
+    String sId = String.valueOf(System.currentTimeMillis());
+    String sI = "CM_ST_";
+
+    String stockId = sI + sId;
+
     public JButton getSelectDeBtn() {
         return selectDeBtn;
     }
@@ -69,7 +74,7 @@ public class AddStocks extends javax.swing.JFrame {
             ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `stock` INNER JOIN "
                     + "`product` ON `stock`.`product_id`=`product`.`id`"
                     + "INNER JOIN `brand` ON `brand`.`id`=`product`.`brand_id`"
-                    + "INNER JOIN `category` ON `category`.`id`=`product`.`category_id`");
+                    + "INNER JOIN `category` ON `category`.`id`=`product`.`category_id` WHERE `stock`.`id`='" + stockId + "'");
 
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
@@ -177,7 +182,7 @@ public class AddStocks extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel2.setFont(new java.awt.Font("Poppins", 1, 22)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Stencil", 2, 22)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 153, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Add Stocks");
@@ -505,10 +510,6 @@ public class AddStocks extends javax.swing.JFrame {
 
     private void addStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addStockActionPerformed
 
-        String sId = String.valueOf(System.currentTimeMillis());
-        String sI = "CM_ST_";
-
-        String stockId = sI + sId;
         String pName = pNameField.getText();
         String brand = String.valueOf(brandComb.getSelectedItem());
         String category = String.valueOf(catComb.getSelectedItem());
@@ -536,7 +537,7 @@ public class AddStocks extends javax.swing.JFrame {
                 MySQL.executeIUD("INSERT INTO `product` (`id`,`name`,`brand_id`,`category_id`) VALUES "
                         + "('" + pi + "" + pId + "','" + pName + "','" + brandMap.get(brand) + "','" + catMap.get(category) + "')");
 
-                MySQL.executeIUD("INSERT INTO `stock` (`id`,`price`,`qty`,`product_id`) "
+                MySQL.executeIUD("INSERT INTO `stock` (`st_id`,`price`,`qty`,`product_id`) "
                         + "VALUES ('" + stockId + "','" + price + "','" + qty + "','" + pi + "" + pId + "')");
 
                 JOptionPane.showMessageDialog(this, "Stock Updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
