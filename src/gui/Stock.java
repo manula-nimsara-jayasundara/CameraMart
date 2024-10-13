@@ -188,6 +188,7 @@ public class Stock extends javax.swing.JFrame {
                 invoice.getBrLable().setText(brand);
                 invoice.getSellPField().setText(price);
                 invoice.getPName().setText(prod_name);
+                invoice.getPID().setText(p_id);
 
                 this.dispose();
             }

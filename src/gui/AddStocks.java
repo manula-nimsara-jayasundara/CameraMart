@@ -4,6 +4,7 @@
  */
 package gui;
 
+import model.StockItem;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.sql.ResultSet;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ import net.sf.jasperreports.view.*;
 public class AddStocks extends javax.swing.JFrame {
 
     HashMap<String, String> brandMap = new HashMap<>();
-
+    HashMap<String, StockItem> stockItemMap = new HashMap<>();
     HashMap<String, String> catMap = new HashMap<>();
 
     public void setBrand(String brand) {
@@ -69,31 +70,22 @@ public class AddStocks extends javax.swing.JFrame {
     }
 
     private void loadStock() {
-        try {
 
-            ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `stock` INNER JOIN "
-                    + "`product` ON `stock`.`product_id`=`product`.`id`"
-                    + "INNER JOIN `brand` ON `brand`.`id`=`product`.`brand_id`"
-                    + "INNER JOIN `category` ON `category`.`id`=`product`.`category_id` WHERE `stock`.`id`='" + stockId + "'");
+        DefaultTableModel modal = (DefaultTableModel) jTable1.getModel();
+        modal.setRowCount(0);
 
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            model.setRowCount(0);
+        for (StockItem stockItem : stockItemMap.values()) {
+            Vector<String> vector = new Vector<>();
+            vector.add(stockId);
+//            vector.add(product_id);
+            vector.add(stockItem.getProName());
+            vector.add(stockItem.getBrand());
+            vector.add(stockItem.getCategory());
+            vector.add(String.valueOf(stockItem.getPrice(Double.parseDouble(priceField.getText()))));
+            vector.add(String.valueOf(stockItem.getQty()));
+            vector.add(String.valueOf(stockItem.getTotal()));
 
-            while (resultSet.next()) {
-                Vector<String> vector = new Vector<>();
-                vector.add(resultSet.getString("stock.id"));
-                vector.add(resultSet.getString("product.id"));
-                vector.add(resultSet.getString("product.name"));
-                vector.add(resultSet.getString("brand.name"));
-                vector.add(resultSet.getString("category.category"));
-                vector.add(resultSet.getString("stock.price"));
-                vector.add(resultSet.getString("stock.qty"));
-
-                model.addRow(vector);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            modal.addRow(vector);
         }
     }
 
@@ -384,7 +376,7 @@ public class AddStocks extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Stock ID", "Product ID", "Product Name", "Brand", "Category", "Price", "Quantity"
+                "Stock ID", "Product Name", "Brand", "Category", "Price", "Quantity", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -404,8 +396,8 @@ public class AddStocks extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         printBtn.setBackground(new java.awt.Color(204, 0, 0));
-        printBtn.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
-        printBtn.setText("Print Stock Report");
+        printBtn.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
+        printBtn.setText("Save Stock");
         printBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 printBtnActionPerformed(evt);
@@ -437,14 +429,14 @@ public class AddStocks extends javax.swing.JFrame {
                         .addComponent(empName)
                         .addGap(18, 18, 18)
                         .addComponent(job))
-                    .addComponent(printBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39))
+                    .addComponent(printBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(empName)
@@ -510,48 +502,71 @@ public class AddStocks extends javax.swing.JFrame {
 
     private void addStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addStockActionPerformed
 
+        String pId = String.valueOf(System.currentTimeMillis());
+        String pi = "CM_P_ID_";
+        String product_id = pi + pId;
+
         String pName = pNameField.getText();
         String brand = String.valueOf(brandComb.getSelectedItem());
         String category = String.valueOf(catComb.getSelectedItem());
-        String qty = String.valueOf(qtyField.getText());
-        String price = String.valueOf(priceField.getText());
+        String qty = qtyField.getText();
+        String price = priceField.getText();
 
-        String pId = String.valueOf(System.currentTimeMillis());
-        String pi = "CM_P_ID_";
+        Double total = Double.parseDouble(qty) * Double.parseDouble(price);
+
+        StockItem stockItem = new StockItem();
+        stockItem.setProName(pName);
+        stockItem.setBrand(brand);
+        stockItem.setCategory(category);
+        stockItem.setQty(Integer.parseInt(qty));
+        stockItem.setTotal(total);
+        stockItem.setPrice(Double.parseDouble(price));
+        stockItem.setpId(product_id);
 
         if (stockId.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Stock Id is Empty Please Contact It Consultant", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (pName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter your Product Name(Model)", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (brand.isEmpty()) {
+        } else if (brand.equals("Select")) {
             JOptionPane.showMessageDialog(this, "Please enter Brand", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (category.isEmpty()) {
+        } else if (category.equals("Select")) {
             JOptionPane.showMessageDialog(this, "Please Select a Category", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (qty.isEmpty()) {
+        } else if (qty.equals(0) || qty.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter Available Quantities", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (price.isEmpty()) {
+        } else if (price.equals("0.00") || price.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter Product Unit Price", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
-
-            try {
-                MySQL.executeIUD("INSERT INTO `product` (`id`,`name`,`brand_id`,`category_id`) VALUES "
-                        + "('" + pi + "" + pId + "','" + pName + "','" + brandMap.get(brand) + "','" + catMap.get(category) + "')");
-
-                MySQL.executeIUD("INSERT INTO `stock` (`st_id`,`price`,`qty`,`product_id`) "
-                        + "VALUES ('" + stockId + "','" + price + "','" + qty + "','" + pi + "" + pId + "')");
-
-                JOptionPane.showMessageDialog(this, "Stock Updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-                this.setVisible(false);
-                this.setVisible(true);
+            reset();
+            loadStock();
+            if (stockItemMap.get(product_id) == null) {
+                stockItemMap.put(product_id, stockItem);
 
                 loadStock();
                 reset();
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-
+//            StockItem found = stockItemMap.get(product_id);
+//
+//            if (found.getPrice(Double.parseDouble(price)) == Double.parseDouble(price)) {
+//                found.setQty(found.getQty() + Integer.parseInt(qty));
+//                loadStock();
+//            }
+//
+//            loadStock();
+//            reset();
+//        
+//            try {
+//                MySQL.executeIUD("INSERT INTO `product` (`id`,`name`,`brand_id`,`category_id`) VALUES "
+//                        + "('" + pi + "" + pId + "','" + pName + "','" + brandMap.get(brand) + "','" + catMap.get(category) + "')");
+//
+//                MySQL.executeIUD("INSERT INTO `stock` (`id`,`price`,`qty`,`product_id`) "
+//                        + "VALUES ('" + stockId + "','" + price + "','" + qty + "','" + pi + "" + pId + "')");
+//
+//                JOptionPane.showMessageDialog(this, "Stock Updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
+//                this.setVisible(false);
+//                this.setVisible(true);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
         }
 
     }//GEN-LAST:event_addStockActionPerformed
@@ -629,7 +644,6 @@ public class AddStocks extends javax.swing.JFrame {
 
                 para.put("Parameter1", empName.getText());
                 para.put("COLUMN_0", resultSet.getString("stock.id"));
-                para.put("COLUMN_1", resultSet.getString("product.id"));
                 para.put("COLUMN_2", resultSet.getString("product.name"));
                 para.put("COLUMN_3", resultSet.getString("brand.name"));
                 para.put("COLUMN_4", resultSet.getString("category.category"));
