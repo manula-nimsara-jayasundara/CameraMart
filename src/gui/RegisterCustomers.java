@@ -167,7 +167,7 @@ public class RegisterCustomers extends javax.swing.JFrame {
         setTitle("Customer Registration");
 
         jLabel1.setFont(new java.awt.Font("Stencil", 2, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 0));
+        jLabel1.setForeground(new java.awt.Color(0, 102, 255));
         jLabel1.setText("Customer Registration");
 
         jLabel2.setFont(new java.awt.Font("Ravie", 1, 20)); // NOI18N

@@ -17,6 +17,7 @@ public class StockItem {
     private double Price;
     private double total;
     private String pId;
+    private String empName;
 
     /**
      * @return the proName
@@ -114,6 +115,20 @@ public class StockItem {
      */
     public void setpId(String pId) {
         this.pId = pId;
+    }
+
+    /**
+     * @return the empName
+     */
+    public String getEmpName() {
+        return empName;
+    }
+
+    /**
+     * @param empName the empName to set
+     */
+    public void setEmpName(String empName) {
+        this.empName = empName;
     }
     
 }

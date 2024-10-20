@@ -159,7 +159,7 @@
               <Color blue="cc" green="cc" red="0" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/images/invoice_2474460.png"/>
+              <Image iconType="3" name="/images/invoice2.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="INVOICE"/>
           </Properties>
@@ -167,7 +167,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Quicksand" size="14" style="1"/>
+              <Font name="Quicksand" size="17" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Employee Name"/>
           </Properties>

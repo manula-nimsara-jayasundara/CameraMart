@@ -27,7 +27,7 @@ public class Dealers extends javax.swing.JFrame {
      * Creates new form Suppliers
      */
     public Dealers() {
-        
+
         initComponents();
         loadDealers();
     }
@@ -166,7 +166,8 @@ public class Dealers extends javax.swing.JFrame {
         if (evt.getClickCount() == 2) {
 
             if (addS != null) {
-                addS.getJLable3().setText(String.valueOf(jTable1.getValueAt(row, 1)));
+                addS.getMobile().setText(String.valueOf(jTable1.getValueAt(row, 0)));
+                addS.getEmpName().setText(String.valueOf(jTable1.getValueAt(row, 1)));
                 this.dispose();
             }
 

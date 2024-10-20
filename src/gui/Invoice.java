@@ -232,10 +232,10 @@ public class Invoice extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Stencil", 2, 30)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 204, 204));
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/invoice_2474460.png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/invoice2.png"))); // NOI18N
         jLabel3.setText("INVOICE");
 
-        jLabel4.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Quicksand", 1, 17)); // NOI18N
         jLabel4.setText("Employee Name");
 
         emName.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
