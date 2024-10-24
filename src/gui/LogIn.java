@@ -13,6 +13,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.SystemTray;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
@@ -131,6 +132,13 @@ public class LogIn extends javax.swing.JFrame {
     public LogIn() {
         initComponents();
         init();
+        icon();
+    }
+
+    public void icon() {
+        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
+//        ImageIcon logo = new ImageIcon(getClass().getClassLoader().getResource("camera.png"));
+        this.setIconImage(logo.getImage());
     }
 
     public void init() {
@@ -357,7 +365,7 @@ public class LogIn extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        FlatLightLaf.setup();
+        FlatMacDarkLaf.setup();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

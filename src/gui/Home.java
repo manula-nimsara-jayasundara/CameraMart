@@ -5,11 +5,14 @@
 package gui;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.awt.Color;
 import model.MySQL;
 import java.sql.ResultSet;
 import java.util.Vector;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,15 +27,16 @@ public class Home extends javax.swing.JFrame {
     public Home(String email, String fname, String lname) {
         initComponents();
         empEmail.setText(email);
-        empName.setText(fname + " " + lname);        
+        empName.setText(fname + " " + lname);
         loadAvStock();
         loadJobRole();
-        
+        LogIn login = new LogIn();
+        login.icon();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         init();
     }
-    
-    public void init(){
+
+    public void init() {
         invoiceBtn.putClientProperty(FlatClientProperties.STYLE, "arc:999");
         invoiceBtn.setForeground(Color.WHITE);
         jButton1.putClientProperty(FlatClientProperties.STYLE, "arc:999");
@@ -65,7 +69,7 @@ public class Home extends javax.swing.JFrame {
         try {
 
             ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `product` "
-                    + "INNER JOIN `product` ON `product`.`id`=`stock`.`product_id` "
+                    + "INNER JOIN `stock` ON `product`.`id`=`stock`.`product_id` "
                     + "INNER JOIN `brand` ON `brand`.`id`=`product`.`brand_id` "
                     + "INNER JOIN `category` ON `category`.`id`=`product`.`category_id`");
 
@@ -224,7 +228,7 @@ public class Home extends javax.swing.JFrame {
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -290,7 +294,7 @@ public class Home extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(addProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Available Products", jPanel2);
@@ -303,7 +307,7 @@ public class Home extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 295, Short.MAX_VALUE)
+            .addGap(0, 326, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Sales", jPanel3);
@@ -333,7 +337,7 @@ public class Home extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(236, Short.MAX_VALUE))
+                .addContainerGap(267, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Stocks", jPanel4);
@@ -350,10 +354,10 @@ public class Home extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(1284, 500));
+        setSize(new java.awt.Dimension(1284, 535));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -390,7 +394,7 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_invoiceBtnActionPerformed
 
     private void addProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProductActionPerformed
-        AddProducts addProducts=new AddProducts();
+        AddProducts addProducts = new AddProducts();
         addProducts.setVisible(true);
     }//GEN-LAST:event_addProductActionPerformed
 

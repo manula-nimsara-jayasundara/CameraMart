@@ -601,7 +601,7 @@ public class AddStocks extends javax.swing.JFrame {
         Double total = Double.parseDouble(qty) * Double.parseDouble(price);
 
         StockItem stockItem = new StockItem();
-//        stockItem.setProName(pName);
+        stockItem.setProName(pName);
         stockItem.setBrand(brand);
         stockItem.setCategory(category);
         stockItem.setQty(Integer.parseInt(qty));
@@ -724,7 +724,7 @@ public class AddStocks extends javax.swing.JFrame {
         String category = String.valueOf(catComb.getSelectedItem());
         String qty = qtyField.getText();
         String price = priceField.getText();
-//        String pid = pId(product_id);
+        String pid = pIdField.getText();
 
         Double total = Double.parseDouble(qty) * Double.parseDouble(price);
 
@@ -735,7 +735,7 @@ public class AddStocks extends javax.swing.JFrame {
         stockItem.setQty(Integer.parseInt(qty));
         stockItem.setTotal(total);
         stockItem.setPrice(Double.parseDouble(price));
-//        stockItem.setpId(pid);
+        stockItem.setpId(pid);
 
         try {
 
@@ -752,24 +752,27 @@ public class AddStocks extends javax.swing.JFrame {
                     + "INNER JOIN `brand` ON `brand`.`id`=`product`.`brand_id` "
                     + "INNER JOIN `category` ON `category`.`id`=`product`.`category_id`");
 
-            //Add Stock
-            MySQL.executeIUD("INSERT INTO `stock` (`id`,`price`,`qty`,`product_id`)"
-                    + " VALUES ('" + stockId + "','" + stockItem.getTotal() + "',"
-                    + "'" + stockItem.getQty() + "','" + stockItem.getpId() + "')");
-            //Add Stock
-
             String path = "src/reports/StockReportCameraMart.jasper";
             HashMap<String, Object> para = new HashMap<>();
             while (resultSet.next()) {
 
+                
+
                 para.put("Parameter1", stockItem.getEmpName());
                 para.put("COLUMN_0", resultSet.getString("stock.id"));
-                para.put("COLUMN_1", resultSet.getString("product.name"));
+                para.put("COLUMN_1", stockItem.getProName());
                 para.put("COLUMN_2", resultSet.getString("brand.name"));
                 para.put("COLUMN_3", resultSet.getString("category.category"));
                 para.put("COLUMN_4", resultSet.getString("stock.price"));
                 para.put("COLUMN_5", resultSet.getString("stock.qty"));
                 para.put("COLUMN_6", stockItem.getTotal());
+                
+                
+                //Add Stock
+                MySQL.executeIUD("INSERT INTO `stock` (`id`,`price`,`qty`,`product_id`)"
+                        + " VALUES ('" + stockId + "','" + stockItem.getTotal() + "',"
+                        + "'" + stockItem.getQty() + "','" + resultSet.getString("product.id") + "')");
+                //Add Stock
             }
 
             JRTableModelDataSource dataSource = new JRTableModelDataSource(jTable1.getModel());
