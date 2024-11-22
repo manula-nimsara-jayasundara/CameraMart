@@ -10,6 +10,7 @@ package model;
  */
 public class invoice_item {
     
+    private String invo_id;
     private String qty;
     private String customer;
     private String stockId;
@@ -99,6 +100,20 @@ public class invoice_item {
      */
     public void setProName(String proName) {
         this.proName = proName;
+    }
+
+    /**
+     * @return the invo_id
+     */
+    public String getInvo_id() {
+        return invo_id;
+    }
+
+    /**
+     * @param invo_id the invo_id to set
+     */
+    public void setInvo_id(String invo_id) {
+        this.invo_id = invo_id;
     }
 
     

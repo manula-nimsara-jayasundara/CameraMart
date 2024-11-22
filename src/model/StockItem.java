@@ -18,6 +18,7 @@ public class StockItem {
     private double total;
     private String pId;
     private String empName;
+    private double amount;
 
     /**
      * @return the proName
@@ -78,7 +79,7 @@ public class StockItem {
     /**
      * @return the uPrice
      */
-    public Double getPrice(double parseDouble) {
+    public Double getPrice() {
         return Price;
     }
 
@@ -129,6 +130,20 @@ public class StockItem {
      */
     public void setEmpName(String empName) {
         this.empName = empName;
+    }
+
+    /**
+     * @return the amount
+     */
+    public double getAmount() {
+        return amount;
+    }
+
+    /**
+     * @param amount the amount to set
+     */
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
     
 }

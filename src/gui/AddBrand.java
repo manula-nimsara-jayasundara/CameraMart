@@ -118,6 +118,7 @@ public class AddBrand extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String bName = bNField.getText();
 //        as.setBrand(bName);
+        
 
         if (bName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter Brand Name", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -128,12 +129,10 @@ public class AddBrand extends javax.swing.JDialog {
                 MySQL.executeIUD("INSERT INTO `brand` (`name`) VALUES ('" + bName + "')");
                 JOptionPane.showMessageDialog(this, "Brand Added", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-                
-                
                 AddStocks addStocks = new AddStocks();
-                
+
                 addStocks.loadBrand();
-                
+
                 String brand = bNField.getText();
                 addStocks.setBrand(brand);
 //                as.setBrand(brand);

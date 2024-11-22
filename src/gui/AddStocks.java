@@ -852,7 +852,7 @@ public class AddStocks extends javax.swing.JFrame {
         Dealers dealers = new Dealers();
         dealers.setVisible(true);
         dealers.setAddstocks(this);
-        
+
     }//GEN-LAST:event_selectDeBtnActionPerformed
 
     private void selectProdBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectProdBtnMouseClicked
@@ -903,21 +903,28 @@ public class AddStocks extends javax.swing.JFrame {
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-//                MySQL.executeIUD("INSERT INTO `grn` (`id`,`date_and_time`,`paid_amount`,`dealer_mobile`,`employee_email`) "
-//                        + "VALUES ('" + grn_id + "','" + sdf.format(date) + "','" + payableAmo + "','" + mobile + "','" + empEmail + "')");
+                MySQL.executeIUD("INSERT INTO `grn` (`id`,`date_and_time`,`paid_amount`,`dealer_mobile`,`employee_email`) "
+                        + "VALUES ('" + grn_id + "','" + sdf.format(date) + "','" + payableAmo + "','" + mobile + "','" + empEmail.getText() + "')");
 
-                System.out.println(empEmail);
-
-                ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `stock` INNER JOIN "
-                        + "`product` ON `stock.product_id`=`product.id` INNER JOIN "
-                        + "`brand` ON `product.brand_id`=`brand.id` INNER JOIN "
-                        + "`category` ON `product.category_id`=`category.id`");
+//                System.out.println(empEmail.getText());
+                ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `stock` "
+                        + "INNER JOIN `product` ON `product`.`id` = `stock`.`product_id` "
+                        + "INNER JOIN `brand` ON `brand`.`id` = `product`.`brand_id` "
+                        + "INNER JOIN `category` ON `category`.`id` = `product`.`category_id`");
 
                 StockItem stockItem = new StockItem();
 
                 String path = "src/reports/StockReportCameraMart.jasper";
                 HashMap<String, Object> para = new HashMap<>();
+                
+                stockItem.setEmpName(empName.getText());
+                
                 while (resultSet.next()) {
+
+                    String total = resultSet.getString("stock.price");
+                    String qty = resultSet.getString("stock.qty");
+                    double tot = Double.parseDouble(total) * Double.parseDouble(qty);
+                    stockItem.setTotal(tot);
 
                     para.put("Parameter1", stockItem.getEmpName());
                     para.put("COLUMN_0", resultSet.getString("stock.id"));
@@ -940,8 +947,10 @@ public class AddStocks extends javax.swing.JFrame {
 //                }
 
                 JOptionPane.showMessageDialog(this, "success", "Success", JOptionPane.INFORMATION_MESSAGE);
-            }else{
-                JOptionPane.showMessageDialog(this,"Your Stocks are Empty! Please add stocks to generate a GRN Report.","Warning", JOptionPane.WARNING_MESSAGE);
+                reset();
+                tableReset();
+            } else {
+                JOptionPane.showMessageDialog(this, "Your Stocks are Empty! Please add stocks to generate a GRN Report.", "Warning", JOptionPane.WARNING_MESSAGE);
             }
 
 //            }
