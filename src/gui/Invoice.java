@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -42,6 +43,7 @@ public class Invoice extends javax.swing.JFrame {
         invId();
         loadPaymentMeths();
 
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
     double total = 0;
     double totI = 0;
@@ -606,6 +608,11 @@ public class Invoice extends javax.swing.JFrame {
         String price = sellPFild.getText();
         String proName = pName.getText();
 
+        String empEmail = LogIn.getEmployeeEmail();
+        String invoice_id = inIdLable.getText();
+
+        String payMeth = String.valueOf(pMCombo.getSelectedItem());
+
         invoice_item invoice_item = new invoice_item();
         invoice_item.setQty(String.valueOf(qty));
         invoice_item.setCustomer(customer);
@@ -614,19 +621,14 @@ public class Invoice extends javax.swing.JFrame {
         invoice_item.setSellPrice(Double.parseDouble(price));
         invoice_item.setProName(proName);
 
-        String empEmail = LogIn.getEmployeeEmail();
-        String invoice_id = inIdLable.getText();
-
-        String payMeth = String.valueOf(pMCombo.getSelectedItem());
-
         if (invoice_id.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please contact your Developers! Because Invoice Id is not generate well.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (qty == null) {
             JOptionPane.showMessageDialog(this, "Please enter Quantity!.", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (customer.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter Customer's Mobile Number!.", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (!customer.matches("^07[01245678]{1}[0-9]{7}$")) {
-            JOptionPane.showMessageDialog(this, "Invalid Mobile Number!.", "Warning", JOptionPane.WARNING_MESSAGE);
+//        } else if (customer.isEmpty()) {
+//            JOptionPane.showMessageDialog(this, "Please enter Customer's Mobile Number!.", "Warning", JOptionPane.WARNING_MESSAGE);
+//        } else if (!customer.matches("^07[01245678]{1}[0-9]{7}$")) {
+//            JOptionPane.showMessageDialog(this, "Invalid Mobile Number!.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (stock.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please contact your Developers! Because Stock Id is not generate well.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (brand.isEmpty()) {
@@ -637,7 +639,7 @@ public class Invoice extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please contact your Developers! Because Product Name is missing.", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
 
-            totI = Integer.parseInt(qty) * Integer.parseInt(price);
+            totI = Double.parseDouble(qty) * Double.parseDouble(price);
 
             total = total + (totI);
             totField.setText(String.valueOf(total));
@@ -645,6 +647,19 @@ public class Invoice extends javax.swing.JFrame {
 
             resetIn();
             loadInvoiceItems();
+
+            if (invoiceItemMap.get(invoice_id) == null) {
+                invoiceItemMap.put(invoice_id, invoice_item);
+
+                resetIn();
+                loadInvoiceItems();
+            }
+
+            try {
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 //            try {
 //
