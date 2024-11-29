@@ -48,6 +48,22 @@ public class Invoice extends javax.swing.JFrame {
     double total = 0;
     double totI = 0;
 
+    
+    public void loadInvoiceItems() {
+        DefaultTableModel modal = (DefaultTableModel) jTable1.getModel();
+        modal.setRowCount(0);
+
+        try {
+            ResultSet resultSet = MySQL.executeSearch("SELECT * FROM ``");
+
+            while (resultSet.next()) {
+                
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void invId() {
         String invGenId = String.valueOf(System.currentTimeMillis());
         String invExt = "CM_IN";
@@ -317,6 +333,7 @@ public class Invoice extends javax.swing.JFrame {
         jLabel11.setText("Selling Price");
 
         sellPFild.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.00"))));
+        sellPFild.setText("0.00");
 
         pName.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
         pName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
