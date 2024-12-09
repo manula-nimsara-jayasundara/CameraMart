@@ -22,6 +22,12 @@ public class Products extends javax.swing.JFrame {
         this.addS = addS;
     }
 
+    private Invoice addIn;
+
+    public void addInvoice(Invoice addIn) {
+        this.addIn = addIn;
+    }
+
     /**
      * Creates new form Products
      */
@@ -36,17 +42,17 @@ public class Products extends javax.swing.JFrame {
             ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `product` "
                     + "INNER JOIN `brand` ON `brand`.`id`=`product`.`brand_id` "
                     + "INNER JOIN `category` ON `category`.`id`=`product`.category_id");
-            
-            DefaultTableModel modal=(DefaultTableModel) jTable1.getModel();
+
+            DefaultTableModel modal = (DefaultTableModel) jTable1.getModel();
             modal.setRowCount(0);
-            
-            while(resultSet.next()){
-                Vector<String> vector=new Vector<>();
+
+            while (resultSet.next()) {
+                Vector<String> vector = new Vector<>();
                 vector.add(resultSet.getString("product.id"));
                 vector.add(resultSet.getString("product.name"));
                 vector.add(resultSet.getString("brand.name"));
                 vector.add(resultSet.getString("category.category"));
-                
+
                 modal.addRow(vector);
             }
 
@@ -187,7 +193,7 @@ public class Products extends javax.swing.JFrame {
             addS.getProductN().setText(String.valueOf(jTable1.getValueAt(row, 1)));
             addS.getBrCombo().setSelectedItem(jTable1.getValueAt(row, 2));
             addS.getCatCombo().setSelectedItem(jTable1.getValueAt(row, 3));
-            
+
             this.dispose();
         }
     }//GEN-LAST:event_jTable1MouseClicked

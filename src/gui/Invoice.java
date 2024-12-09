@@ -45,24 +45,11 @@ public class Invoice extends javax.swing.JFrame {
 
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
+    
+    
+    
     double total = 0;
     double totI = 0;
-
-    
-    public void loadInvoiceItems() {
-        DefaultTableModel modal = (DefaultTableModel) jTable1.getModel();
-        modal.setRowCount(0);
-
-        try {
-            ResultSet resultSet = MySQL.executeSearch("SELECT * FROM ``");
-
-            while (resultSet.next()) {
-                
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void invId() {
         String invGenId = String.valueOf(System.currentTimeMillis());
@@ -114,15 +101,15 @@ public class Invoice extends javax.swing.JFrame {
         DefaultTableModel modal = (DefaultTableModel) jTable1.getModel();
         modal.setRowCount(0);
 
-        total = 0;
+//        total = 0;
         String invoice_id = inIdLable.getText();
 
         for (invoice_item invoiceItem : invoiceItemMap.values()) {
-            Vector vector = new Vector();
+            Vector<String> vector = new Vector();
             vector.add(invoice_id);
-            vector.add(getPID());
+            vector.add(String.valueOf(getPID()));
             vector.add(invoiceItem.getProName());
-            vector.add(invoiceItem.getSellPrice());
+            vector.add(String.valueOf(invoiceItem.getSellPrice()));
             vector.add(invoiceItem.getQty());
 
             double itemTotal = Double.parseDouble(invoiceItem.getQty()) * invoiceItem.getSellPrice();
@@ -214,7 +201,6 @@ public class Invoice extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         stkLable = new javax.swing.JLabel();
-        seleStock = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         qtyField = new javax.swing.JFormattedTextField();
         jLabel10 = new javax.swing.JLabel();
@@ -225,6 +211,7 @@ public class Invoice extends javax.swing.JFrame {
         addInvoice = new javax.swing.JButton();
         cusMobField = new javax.swing.JTextField();
         proIdLable = new javax.swing.JLabel();
+        seleStock = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -303,16 +290,6 @@ public class Invoice extends javax.swing.JFrame {
 
         stkLable.setText(".............................................");
 
-        seleStock.setBackground(new java.awt.Color(0, 102, 204));
-        seleStock.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
-        seleStock.setForeground(new java.awt.Color(255, 255, 255));
-        seleStock.setText("Select a Stock");
-        seleStock.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                seleStockActionPerformed(evt);
-            }
-        });
-
         jLabel9.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
         jLabel9.setText("Quantity");
 
@@ -360,6 +337,16 @@ public class Invoice extends javax.swing.JFrame {
         proIdLable.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         proIdLable.setText("Product ID");
 
+        seleStock.setBackground(new java.awt.Color(0, 102, 204));
+        seleStock.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
+        seleStock.setForeground(new java.awt.Color(255, 255, 255));
+        seleStock.setText("Select a Stock");
+        seleStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                seleStockActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -393,13 +380,13 @@ public class Invoice extends javax.swing.JFrame {
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(stkLable, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(seleStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addGap(27, 27, 27)
                         .addComponent(qtyField, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(proIdLable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(proIdLable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(seleStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12))
         );
         jPanel2Layout.setVerticalGroup(
@@ -411,29 +398,28 @@ public class Invoice extends javax.swing.JFrame {
                     .addComponent(inIdLable)
                     .addComponent(jLabel9)
                     .addComponent(qtyField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addGap(24, 24, 24)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(stkLable))
-                        .addGap(30, 30, 30)
-                        .addComponent(seleStock)
-                        .addGap(30, 30, 30)
+                        .addGap(111, 111, 111)
                         .addComponent(pName))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(cusMobField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cusMobField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(seleStock))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(brLable)
-                            .addComponent(jLabel10))
+                            .addComponent(jLabel10)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel8)
+                                .addComponent(stkLable)))
                         .addGap(30, 30, 30)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel11)
                             .addComponent(sellPFild, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGap(14, 14, 14)
                 .addComponent(proIdLable)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addInvoice))
@@ -610,99 +596,21 @@ public class Invoice extends javax.swing.JFrame {
 
     }//GEN-LAST:event_cusMobFieldKeyPressed
 
-    private void seleStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seleStockActionPerformed
-        Stock stock = new Stock();
-        stock.setVisible(true);
-        stock.setInvoice(this);
-    }//GEN-LAST:event_seleStockActionPerformed
-
     private void addInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addInvoiceActionPerformed
 
-        String qty = (qtyField.getText());
-        String customer = cusMobField.getText();
-        String stock = stkLable.getText();
+        String invoId = inIdLable.getText();
+        String qty = qtyField.getText();
         String brand = brLable.getText();
-        String price = sellPFild.getText();
-        String proName = pName.getText();
 
-        String empEmail = LogIn.getEmployeeEmail();
-        String invoice_id = inIdLable.getText();
-
-        String payMeth = String.valueOf(pMCombo.getSelectedItem());
-
-        invoice_item invoice_item = new invoice_item();
-        invoice_item.setQty(String.valueOf(qty));
-        invoice_item.setCustomer(customer);
-        invoice_item.setStockId(stock);
-        invoice_item.setBrand(brand);
-        invoice_item.setSellPrice(Double.parseDouble(price));
-        invoice_item.setProName(proName);
-
-        if (invoice_id.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please contact your Developers! Because Invoice Id is not generate well.", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (qty == null) {
-            JOptionPane.showMessageDialog(this, "Please enter Quantity!.", "Warning", JOptionPane.WARNING_MESSAGE);
-//        } else if (customer.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Please enter Customer's Mobile Number!.", "Warning", JOptionPane.WARNING_MESSAGE);
-//        } else if (!customer.matches("^07[01245678]{1}[0-9]{7}$")) {
-//            JOptionPane.showMessageDialog(this, "Invalid Mobile Number!.", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (stock.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please contact your Developers! Because Stock Id is not generate well.", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (brand.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please contact your Developers! Because Brand Name is missing.", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (price.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please contact your Developers! Because Price is missing.", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (proName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please contact your Developers! Because Product Name is missing.", "Warning", JOptionPane.WARNING_MESSAGE);
+        if (invoId.equals(".................................")) {
+            JOptionPane.showMessageDialog(this, "Please Contact Developer!", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (qty.equals("0")) {
+            JOptionPane.showMessageDialog(this, "Please Enter Quantity!", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (brand.equals(".................................")) {
+            JOptionPane.showMessageDialog(this, "Please Select a Product!", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
-
-            totI = Double.parseDouble(qty) * Double.parseDouble(price);
-
-            total = total + (totI);
-            totField.setText(String.valueOf(total));
-            String date_time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-
-            resetIn();
-            loadInvoiceItems();
-
-            if (invoiceItemMap.get(invoice_id) == null) {
-                invoiceItemMap.put(invoice_id, invoice_item);
-
-                resetIn();
-                loadInvoiceItems();
-            }
-
-            try {
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-//            try {
-//
-//                MySQL.executeIUD("INSERT INTO `invoice` "
-//                        + "(`invo`,`date_time`,`payment_method_id`,`customer_mobile`)"
-//                        + " VALUES ('" + invoice_id + "',"
-//                        + "'" + date_time + "','" + paymentMethodsMap.get(payMeth) + "','" + customer + "')");
-//
-//                MySQL.executeIUD("INSERT INTO `invoice_item` (`qty`,`stock_id`,`invoice_invo`) "
-//                        + "VALUES ('" + qty + "','" + stock + "','" + invoice_id + "')");
-//
-//                resetIn();
-//                loadInvoiceItems();
-//
-////                if (jTable1.getRowCount() > 0) {
-////                    DefaultTableModel model = (DefaultTableModel) jTable1.();
-////                    model.setRowCount(0);
-////                    loadInvoiceItems();
-////                } else {
-////                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+            JOptionPane.showMessageDialog(this, "OK", "Warning", JOptionPane.WARNING_MESSAGE);
         }
-
-
     }//GEN-LAST:event_addInvoiceActionPerformed
 
 
@@ -781,6 +689,12 @@ public class Invoice extends javax.swing.JFrame {
 
     }//GEN-LAST:event_qtyFieldKeyPressed
 
+    private void seleStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seleStockActionPerformed
+        Products products = new Products();
+        products.setVisible(true);
+        
+    }//GEN-LAST:event_seleStockActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -841,7 +755,7 @@ public class Invoice extends javax.swing.JFrame {
         cusMobField.setText("");
         stkLable.setText(".............................................");
         brLable.setText(".................................");
-        sellPFild.setText("");
+        sellPFild.setText("0.00");
         pName.setText("Product Name");
         qtyField.grabFocus();
     }
