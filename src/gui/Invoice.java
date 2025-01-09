@@ -45,9 +45,7 @@ public class Invoice extends javax.swing.JFrame {
 
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
-    
-    
-    
+
     double total = 0;
     double totI = 0;
 
@@ -409,12 +407,13 @@ public class Invoice extends javax.swing.JFrame {
                             .addComponent(cusMobField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(seleStock))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(brLable)
-                            .addComponent(jLabel10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel8)
-                                .addComponent(stkLable)))
+                                .addComponent(stkLable))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(brLable)
+                                .addComponent(jLabel10)))
                         .addGap(30, 30, 30)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel11)
@@ -601,6 +600,10 @@ public class Invoice extends javax.swing.JFrame {
         String invoId = inIdLable.getText();
         String qty = qtyField.getText();
         String brand = brLable.getText();
+        String stock = stkLable.getText();
+        String sellPrice = sellPFild.getText();
+        String pName = this.pName.getText();
+        String pId = proIdLable.getText();
 
         if (invoId.equals(".................................")) {
             JOptionPane.showMessageDialog(this, "Please Contact Developer!", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -608,8 +611,14 @@ public class Invoice extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please Enter Quantity!", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (brand.equals(".................................")) {
             JOptionPane.showMessageDialog(this, "Please Select a Product!", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "OK", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (sellPrice.equals("0.00")) {
+            JOptionPane.showMessageDialog(this, "Please Check Stock of You Selected Product", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (pId.equals("Product ID")) {
+            JOptionPane.showMessageDialog(this, "Please Check Product ID", "Warning", JOptionPane.WARNING_MESSAGE);
+        }else {
+            
+            resetIn();
+            
         }
     }//GEN-LAST:event_addInvoiceActionPerformed
 
@@ -690,9 +699,9 @@ public class Invoice extends javax.swing.JFrame {
     }//GEN-LAST:event_qtyFieldKeyPressed
 
     private void seleStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seleStockActionPerformed
-        Products products = new Products();
-        products.setVisible(true);
-        
+        invoiceProducts invoicePro = new invoiceProducts();
+        invoicePro.setVisible(true);
+        invoicePro.Invoice(this);
     }//GEN-LAST:event_seleStockActionPerformed
 
     /**

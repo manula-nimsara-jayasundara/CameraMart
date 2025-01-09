@@ -92,9 +92,7 @@ public class AddStocks extends javax.swing.JFrame {
     }
 
     public JLabel getEmpName() {
-
         return name;
-
     }
 
     private void loadStock() {
