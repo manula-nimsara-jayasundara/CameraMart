@@ -156,9 +156,64 @@ public class Invoice extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(this, "Total Field is Zero! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
+            if (paymentMethod.equals("Cash")) {
+                //cash
+                payField.setEnabled(true);
+                payField.setEditable(true);
+//            System.out.println("Cash");
+                balance = payment - total;
+
+                if (balance < 0) {
+                    payBill.setEnabled(false);
+                    payField.setEnabled(true);
+                } else {
+                    payBill.setEnabled(true);
+                }
+            } else {
+                //card
+                payField.setEnabled(false);
+                payField.setText(String.valueOf(total));
+//            System.out.println("Card");
+                payment = total;
+                balance = 0;
+                payField.setText(String.valueOf(payment));
+                payField.setEditable(false);
+                payBill.setEnabled(true);
+                balField.setEnabled(false);
+            }
+
+            balField.setText(String.valueOf(balance));
 
         }
 
+    }
+
+    public void payCalculate() {
+        //settings
+        if (discField.getText().isEmpty()) {
+            discount = 0;
+        } else {
+            discount = Double.parseDouble(discField.getText());
+        }
+
+        if (payField.getText().isEmpty()) {
+            payment = 0;
+            JOptionPane.showMessageDialog(this, "Payment Field is Empty! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+            payment = Double.parseDouble(payField.getText());
+        }
+
+        total = Double.parseDouble(totField.getText());
+
+        paymentMethod = String.valueOf(pMCombo.getSelectedItem());
+        //settings
+
+        total -= discount;
+
+//        if (total <= 0) {
+//
+//            JOptionPane.showMessageDialog(this, "Total Field is Zero! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
+//        } else {}
         if (paymentMethod.equals("Cash")) {
             //cash
             payField.setEnabled(true);
@@ -187,6 +242,61 @@ public class Invoice extends javax.swing.JFrame {
 
         balField.setText(String.valueOf(balance));
 
+    }
+
+    public void disCalculate() {
+        //settings
+        if (discField.getText().isEmpty()) {
+            discount = 0;
+        } else {
+            discount = Double.parseDouble(discField.getText());
+        }
+
+        if (payField.getText().isEmpty()) {
+            payment = 0;
+            JOptionPane.showMessageDialog(this, "Payment Field is Empty! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+            payment = Double.parseDouble(payField.getText());
+        }
+
+        total = Double.parseDouble(totField.getText());
+
+        paymentMethod = String.valueOf(pMCombo.getSelectedItem());
+        //settings
+
+        total -= discount;
+
+//        if (total <= 0) {
+//
+//            JOptionPane.showMessageDialog(this, "Total Field is Zero! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
+//        } else {}
+        if (paymentMethod.equals("Cash")) {
+            //cash
+            payField.setEnabled(true);
+            payField.setEditable(true);
+//            System.out.println("Cash");
+            balance = payment - total;
+
+            if (balance < 0) {
+                payBill.setEnabled(false);
+                payField.setEnabled(true);
+            } else {
+                payBill.setEnabled(true);
+            }
+        } else {
+            //card
+            payField.setEnabled(false);
+            payField.setText(String.valueOf(total));
+//            System.out.println("Card");
+            payment = total;
+            balance = 0;
+            payField.setText(String.valueOf(payment));
+            payField.setEditable(false);
+            payBill.setEnabled(true);
+            balField.setEnabled(false);
+        }
+
+        balField.setText(String.valueOf(balance));
     }
 
     /**
@@ -730,7 +840,7 @@ public class Invoice extends javax.swing.JFrame {
     }//GEN-LAST:event_payBillActionPerformed
 
     private void payFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_payFieldKeyReleased
- //        double discount = Double.parseDouble(discField.getText());
+        //        double discount = Double.parseDouble(discField.getText());
 //        double payment = Double.parseDouble(payField.getText());
 //        double balence = 0;
 //        String invoice_id = inIdLable.getText();
@@ -738,13 +848,13 @@ public class Invoice extends javax.swing.JFrame {
 //        total = total - discount;
 //        balence = payment - total;
 
-        calculate();
+        payCalculate();
 
 
     }//GEN-LAST:event_payFieldKeyReleased
 
     private void discFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_discFieldKeyReleased
-        calculate();
+        disCalculate();
     }//GEN-LAST:event_discFieldKeyReleased
 
     private void pMComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_pMComboItemStateChanged
