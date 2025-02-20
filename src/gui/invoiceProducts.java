@@ -37,6 +37,7 @@ public class invoiceProducts extends javax.swing.JFrame {
         try {
             
             ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `product` "
+                    + "INNER JOIN `stock` ON `stock`.`product_id`=`product`.`id`"
                     + "INNER JOIN `brand` ON `brand`.`id`=`product`.`brand_id` "
                     + "INNER JOIN `category` ON `category`.`id`=`product`.category_id");
             
@@ -49,6 +50,7 @@ public class invoiceProducts extends javax.swing.JFrame {
                 vector.add(resultSet.getString("product.name"));
                 vector.add(resultSet.getString("brand.name"));
                 vector.add(resultSet.getString("category.category"));
+                vector.add(resultSet.getString("stock.price"));
                 vector.add(resultSet.getString("stock.st_id"));
                 
                 modal.addRow(vector);
@@ -78,7 +80,6 @@ public class invoiceProducts extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 520));
 
         roundedPanel1.setBackground(new java.awt.Color(255, 255, 255));
         roundedPanel1.setPreferredSize(new java.awt.Dimension(800, 520));
@@ -96,11 +97,11 @@ public class invoiceProducts extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Product ID", "Product Name", "Brand", "Category", "Stock ID"
+                "Product ID", "Product Name", "Brand", "Category", "Price", "Stock ID"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -186,7 +187,11 @@ public class invoiceProducts extends javax.swing.JFrame {
 
         if(evt.getClickCount()==2){
             addIn.getBrLable().setText(String.valueOf(jTable1.getValueAt(row, 2)));
-            addIn.getStkLable().setText(String.valueOf(jTable1.getValueAt(row, 4)));
+            addIn.getStkLable().setText(String.valueOf(jTable1.getValueAt(row, 5)));
+            addIn.getPName().setText(String.valueOf(jTable1.getValueAt(row, 1)));
+            addIn.getPID().setText(String.valueOf(jTable1.getValueAt(row, 0)));
+            addIn.getSellPField().setText(String.valueOf(jTable1.getValueAt(row, 4)));
+            this.dispose();
         }
     }//GEN-LAST:event_jTable1MouseClicked
 

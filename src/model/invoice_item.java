@@ -17,6 +17,7 @@ public class invoice_item {
     private String brand;
     private double sellPrice;
     private String proName;
+    private String pId;
 
     /**
      * @return the qty
@@ -114,6 +115,20 @@ public class invoice_item {
      */
     public void setInvo_id(String invo_id) {
         this.invo_id = invo_id;
+    }
+
+    /**
+     * @return the pId
+     */
+    public String getpId() {
+        return pId;
+    }
+
+    /**
+     * @param pId the pId to set
+     */
+    public void setpId(String pId) {
+        this.pId = pId;
     }
 
     

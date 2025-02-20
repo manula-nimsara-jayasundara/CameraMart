@@ -451,6 +451,7 @@ public class Home extends javax.swing.JFrame {
         } else {
             FlatMacDarkLaf.setup();
         }
+        SwingUtilities.updateComponentTreeUI(this);
     }//GEN-LAST:event_themeJComboActionPerformed
 
 

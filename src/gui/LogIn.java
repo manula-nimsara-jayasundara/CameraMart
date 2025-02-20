@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import raven.toast.ui.ToastNotificationPanel;
 import java.util.TimerTask;
 import javax.swing.*;
+import model.User;
 import raven.toast.ToastClientProperties;
 
 /**
@@ -58,74 +59,7 @@ public class LogIn extends javax.swing.JFrame {
         return employeeJob;
     }
 
-//    public class Toast extends JWindow {
-//
-//        private int duration;
-//
-//        public Toast(String message, int duration) {
-//            this.duration = duration;
-//
-//            // Create a panel to hold the toast message
-//            JPanel panel = new JPanel() {
-//                @Override
-//                protected void paintComponent(Graphics g) {
-//
-//                    JLabel label = new JLabel(toastNotificationPanel.getKey(), toastNotificationPanel.getDefaultIcon(), JLabel.CENTER);
-//                    label.setVerticalTextPosition(JLabel.BOTTOM);
-//                    label.setForeground(toastNotificationPanel.getDefaultColor());
-//                    label.setHorizontalTextPosition(JLabel.CENTER);
-//                    label.putClientProperty(FlatClientProperties.STYLE, ""
-//                            + "font:$Notifications.font;"
-//                            + "iconTextGap:0");
-//                    toastNotificationPanel.putClientProperty(ToastClientProperties.TOAST_ICON, label);
-//                    
-//                    
-//                    //                    super.paintComponent(g);
-//                    //                    // Set a rounded background with semi-transparent color
-//                                        g.setColor(new Color(255, 0, 0, 130)); // (R, G, B, Alpha)
-//                                        g.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10); // Rounded corners
-//                    //
-//                    //                    // Add shadow effect
-//                                        g.setColor(new Color(255, 0, 0, 100)); // Shadow color
-//                                        g.fillRoundRect(5, 5, getWidth(), getHeight(), 10, 10); // Shadow position
-//                }
-//            };
-//
-//            // Customize the panel appearance
-//            panel.setLayout(new BorderLayout()); // Set layout to BorderLayout
-//            panel.setBackground(new Color(255, 0, 0, 0)); // Transparent panel background
-//            panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Padding for the text
-//
-//            // Create the label for the toast message
-////        JLabel label = new JLabel(message);
-//            JLabel label = new JLabel(toastNotificationPanel.getKey(), toastNotificationPanel.getDefaultIcon(), JLabel.CENTER);
-//
-//            label.setForeground(Color.WHITE); // Set text color to white
-//            label.setFont(new Font("Segoe UI", Font.BOLD, 16)); // Modern font
-//            label.setHorizontalAlignment(SwingConstants.CENTER); // Center the text
-//            panel.add(label, BorderLayout.CENTER); // Add label to panel
-//
-//            // Add panel to toast window
-//            getContentPane().add(panel);
-//            setSize(350, 80); // Set toast size
-//            setLocationRelativeTo(null); // Center the toast on screen
-//        }
-//
-//        public void showToast() {
-//            setVisible(true); // show the toast
-//
-//            // Timer to hide the toast after the duration
-//            Timer timer = new Timer(duration, new ActionListener() {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    setVisible(false); // hide the toast
-//                    dispose(); // close the window
-//                }
-//            });
-//            timer.setRepeats(false); // ensure the timer only runs once
-//            timer.start(); // start the timer
-//        }
-//    }
+    
     /**
      * Creates new form LogIn
      */
@@ -321,17 +255,12 @@ public class LogIn extends javax.swing.JFrame {
 
         if (email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter your email", "Warning", JOptionPane.WARNING_MESSAGE);
-//            Toast.showToastMessage("Please Enter Your Email", 2000);
-
-//            Toast toast = new Toast("Please Enter Your Email", 2000);
-//            toast.showToast();
+            
         } else if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9\\+_-]+(\\.[A-Za-z0-9\\+_-]+)*@[^-][A-Za-z0-9\\+-]+"
                 + "(\\.[A-Za-z0-9\\+-]+)*(\\.[A-Za-z]{2,})$")) {
 
             JOptionPane.showMessageDialog(this, "Invalid email", "Warning", JOptionPane.WARNING_MESSAGE);
-//            Toast.showToastMessage("Invalid Email", 2000);
-//            Toast toast = new Toast("Invalid Email", 2000);
-//            toast.showToast();
+//            
 
         } else if (password.isEmpty()) {
 
@@ -347,6 +276,7 @@ public class LogIn extends javax.swing.JFrame {
 
                 if (resultSet.next()) {
 
+                    User user=new User();
                     String fName = resultSet.getString("first_name");
                     String lName = resultSet.getString("last_name");
                     String empName = fName + " " + lName;
@@ -358,6 +288,11 @@ public class LogIn extends javax.swing.JFrame {
 
                     setEmployeeEmail(email);
                     setEmployeeName(empName);
+                    
+                    user.setEmployeeEmail(email);
+                    user.setEmployeeName(empName);
+                    user.setPassword(password);
+                    user.setJobRole(employeeJob);
 
                 } else {
 

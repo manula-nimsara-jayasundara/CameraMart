@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import model.User;
 
 /**
  *
@@ -50,6 +51,10 @@ public class Invoice extends javax.swing.JFrame {
     double totI = 0;
 
     public void invId() {
+        genInvID();
+    }
+
+    private void genInvID() {
         String invGenId = String.valueOf(System.currentTimeMillis());
         String invExt = "CM_IN";
         String invoiceId = invExt + invGenId;
@@ -95,17 +100,17 @@ public class Invoice extends javax.swing.JFrame {
         }
     }
 
+//    String invoice_id;
     public void loadInvoiceItems() {
         DefaultTableModel modal = (DefaultTableModel) jTable1.getModel();
         modal.setRowCount(0);
 
 //        total = 0;
-        String invoice_id = inIdLable.getText();
-
+//        invoice_id = inIdLable.getText();
         for (invoice_item invoiceItem : invoiceItemMap.values()) {
             Vector<String> vector = new Vector();
-            vector.add(invoice_id);
-            vector.add(String.valueOf(getPID()));
+            vector.add(invoiceItem.getInvo_id());
+            vector.add(invoiceItem.getpId());
             vector.add(invoiceItem.getProName());
             vector.add(String.valueOf(invoiceItem.getSellPrice()));
             vector.add(invoiceItem.getQty());
@@ -113,12 +118,14 @@ public class Invoice extends javax.swing.JFrame {
             double itemTotal = Double.parseDouble(invoiceItem.getQty()) * invoiceItem.getSellPrice();
             total += itemTotal;
             vector.add(String.valueOf(itemTotal));
+
+            modal.addRow(vector);
         }
     }
 
     private double discount = 0;
     private double payment = 0;
-    private String paymentMethod = "Select";
+    private String paymentMethod = "Cash";
     private double balance = 0;
 //    int qty = 0;
 
@@ -145,16 +152,18 @@ public class Invoice extends javax.swing.JFrame {
 
         total -= discount;
 
-        if (total < 0) {
+        if (total <= 0) {
 
-            JOptionPane.showMessageDialog(this, "Total Field is Empty! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Total Field is Zero! Please Check...", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
 
         }
 
         if (paymentMethod.equals("Cash")) {
             //cash
+            payField.setEnabled(true);
             payField.setEditable(true);
+//            System.out.println("Cash");
             balance = payment - total;
 
             if (balance < 0) {
@@ -163,10 +172,11 @@ public class Invoice extends javax.swing.JFrame {
             } else {
                 payBill.setEnabled(true);
             }
-
         } else {
             //card
             payField.setEnabled(false);
+            payField.setText(String.valueOf(total));
+//            System.out.println("Card");
             payment = total;
             balance = 0;
             payField.setText(String.valueOf(payment));
@@ -293,6 +303,11 @@ public class Invoice extends javax.swing.JFrame {
 
         qtyField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         qtyField.setText("0");
+        qtyField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                qtyFieldActionPerformed(evt);
+            }
+        });
         qtyField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 qtyFieldKeyPressed(evt);
@@ -478,6 +493,11 @@ public class Invoice extends javax.swing.JFrame {
                 pMComboItemStateChanged(evt);
             }
         });
+        pMCombo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pMComboMouseClicked(evt);
+            }
+        });
 
         balField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
         balField.setText("0.00");
@@ -605,6 +625,15 @@ public class Invoice extends javax.swing.JFrame {
         String pName = this.pName.getText();
         String pId = proIdLable.getText();
 
+        invoice_item invoiceItem = new invoice_item();
+        invoiceItem.setpId(pId);
+        invoiceItem.setInvo_id(invoId);
+        invoiceItem.setQty(qty);
+        invoiceItem.setBrand(brand);
+        invoiceItem.setStockId(stock);
+        invoiceItem.setSellPrice(Double.valueOf(sellPrice));
+        invoiceItem.setProName(pName);
+
         if (invoId.equals(".................................")) {
             JOptionPane.showMessageDialog(this, "Please Contact Developer!", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (qty.equals("0")) {
@@ -615,17 +644,40 @@ public class Invoice extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please Check Stock of You Selected Product", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (pId.equals("Product ID")) {
             JOptionPane.showMessageDialog(this, "Please Check Product ID", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else {
-            
+        } else {
+
+            total += (Double.valueOf(qty)) * (Double.valueOf(sellPrice));
+
+            totField.setText(String.valueOf(total));
+
+            loadInvoiceItems();
             resetIn();
-            
+
+            if (invoiceItemMap.get(pId) == null) {
+                invoiceItemMap.put(pId, invoiceItem);
+
+                loadInvoiceItems();
+                resetIn();
+            }
+
         }
     }//GEN-LAST:event_addInvoiceActionPerformed
 
 
     private void payBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payBillActionPerformed
+
+        User user = new User();
+        String empEmail = user.getJobRole();
+
         String invoice_id = inIdLable.getText();
 
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String addedDate_time = sdf.format(date);
+
+        String cusMobile = cusMobField.getText();
+
+        String payMethod = String.valueOf(pMCombo.getSelectedItem());
         if (total == 0) {
             JOptionPane.showMessageDialog(this, "Please Add invoice first!", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (invoice_id.isEmpty()) {
@@ -637,11 +689,16 @@ public class Invoice extends javax.swing.JFrame {
 
                 try {
 
-                    MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
-                            + "WHERE `invo`='" + invoice_id + "'");
+//                    MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
+//                            + "WHERE `invo`='" + invoice_id + "'");
+                    MySQL.executeIUD("UPDATE `invoice` SET "
+                            + "`id`='" + invoice_id + "',`date_time`='" + addedDate_time + "',`paid_amount`='" + total + "',`discount`='" + discount + "',"
+                            + "`payment_method_id`='" + paymentMethodsMap.get(payMethod) + "',`customer_mobile`='" + cusMobile + "',`employee_email`='" + empEmail + "'");
+
                     JOptionPane.showMessageDialog(this, "Paid!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     resetP();
                     resetIn();
+                    loadInvoiceItems();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -650,11 +707,19 @@ public class Invoice extends javax.swing.JFrame {
                 balance = payment - total;
                 try {
 
-                    MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
-                            + "WHERE `invo`='" + invoice_id + "'");
+//                    MySQL.executeIUD("INSERT INTO `invoice` "
+//                            + "(`id`,`date_time`,`paid_amount`,`discount`,"
+//                            + "`payment_method_id`,`customer_mobile`,`employee_email`)"
+//                            + " VALUES ('" + invoice_id + "','" + addedDate_time + "','" + total + "',"
+//                            + "'" + discount + "','" + paymentMethodsMap.get(payMethod) + "','" + cusMobile + "','" + empEmail + "')");
+                    MySQL.executeIUD("UPDATE `invoice` SET "
+                            + "`id`='" + invoice_id + "',`date_time`='" + addedDate_time + "',`paid_amount`='" + total + "',`discount`='" + discount + "',"
+                            + "`payment_method_id`='" + paymentMethodsMap.get(payMethod) + "',`customer_mobile`='" + cusMobile + "',`employee_email`='" + empEmail + "'");
+
                     JOptionPane.showMessageDialog(this, "Paid!", "Success", JOptionPane.INFORMATION_MESSAGE);
                     resetP();
                     resetIn();
+                    loadInvoiceItems();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -665,7 +730,7 @@ public class Invoice extends javax.swing.JFrame {
     }//GEN-LAST:event_payBillActionPerformed
 
     private void payFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_payFieldKeyReleased
-//        double discount = Double.parseDouble(discField.getText());
+ //        double discount = Double.parseDouble(discField.getText());
 //        double payment = Double.parseDouble(payField.getText());
 //        double balence = 0;
 //        String invoice_id = inIdLable.getText();
@@ -703,6 +768,14 @@ public class Invoice extends javax.swing.JFrame {
         invoicePro.setVisible(true);
         invoicePro.Invoice(this);
     }//GEN-LAST:event_seleStockActionPerformed
+
+    private void pMComboMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pMComboMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pMComboMouseClicked
+
+    private void qtyFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qtyFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_qtyFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -767,6 +840,7 @@ public class Invoice extends javax.swing.JFrame {
         sellPFild.setText("0.00");
         pName.setText("Product Name");
         qtyField.grabFocus();
+        proIdLable.setText("Product ID");
     }
 
     private void resetP() {
