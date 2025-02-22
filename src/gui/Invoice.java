@@ -43,7 +43,7 @@ public class Invoice extends javax.swing.JFrame {
 
         invId();
         loadPaymentMeths();
-
+//        checkTotField();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
@@ -128,6 +128,21 @@ public class Invoice extends javax.swing.JFrame {
     private String paymentMethod = "Cash";
     private double balance = 0;
 //    int qty = 0;
+
+    private void checkTotField() {
+        try {
+        double tot = Double.valueOf(totField.getText());
+
+            if (tot <= 0) {
+                discField.setEnabled(false);
+            } else {
+                discField.setEnabled(true);
+            }
+        } catch (NumberFormatException e) {
+            totField.setText("0.00");
+        }
+
+    }
 
     private void calculate() {
 
@@ -614,6 +629,11 @@ public class Invoice extends javax.swing.JFrame {
 
         totField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0.00"))));
         totField.setText("0.00");
+        totField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                totFieldKeyReleased(evt);
+            }
+        });
 
         discField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
         discField.setText("0.00");
@@ -762,6 +782,7 @@ public class Invoice extends javax.swing.JFrame {
 
             loadInvoiceItems();
             resetIn();
+            checkTotField();
 
             if (invoiceItemMap.get(pId) == null) {
                 invoiceItemMap.put(pId, invoiceItem);
@@ -886,6 +907,15 @@ public class Invoice extends javax.swing.JFrame {
     private void qtyFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qtyFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_qtyFieldActionPerformed
+
+    private void totFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_totFieldKeyReleased
+        checkTotField();
+        String tot = totField.getText();
+
+        if (tot.isEmpty()) {
+            totField.setText("0.00");
+        }
+    }//GEN-LAST:event_totFieldKeyReleased
 
     /**
      * @param args the command line arguments
