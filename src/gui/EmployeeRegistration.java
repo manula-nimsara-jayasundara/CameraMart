@@ -7,6 +7,7 @@ package gui;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -18,7 +19,9 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
+import model.employee;
 
 /**
  *
@@ -38,8 +41,13 @@ public class EmployeeRegistration extends javax.swing.JFrame {
         loadType();
         loadEmployee();
         reset();
-
+        
         init();
+
+        updateBtn.setEnabled(false);
+        
+        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
+        this.setIconImage(logo.getImage());
     }
 
     public void init() {
@@ -115,7 +123,7 @@ public class EmployeeRegistration extends javax.swing.JFrame {
 
                 model.addRow(vector);
             }
-
+registerBtn.setEnabled(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -179,6 +187,11 @@ public class EmployeeRegistration extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
         jLabel6.setText("Password");
 
+        firstNameField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                firstNameFieldActionPerformed(evt);
+            }
+        });
         firstNameField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 firstNameFieldKeyPressed(evt);
@@ -426,42 +439,43 @@ public class EmployeeRegistration extends javax.swing.JFrame {
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
 
+        employee emp = new employee();
         try {
-            String email = emailField.getText();
-            String firstName = firstNameField.getText();
-            String lastName = lastNameField.getText();
-            String nic = nicField.getText();
-            String mobile = mobileField.getText();
-            String password = String.valueOf(passwordField.getPassword());
-            String gender = String.valueOf(genderCombo.getSelectedItem());
-            String type = String.valueOf(typeCombo.getSelectedItem());
+            emp.setEmail(emailField.getText());
+            emp.setFirstName(firstNameField.getText());
+            emp.setLastName(lastNameField.getText());
+            emp.setNic(nicField.getText());
+            emp.setMobile(mobileField.getText());
+            emp.setPassword(String.valueOf(passwordField.getPassword()));
+            emp.setGender(String.valueOf(genderCombo.getSelectedItem()));
+            emp.setType(String.valueOf(typeCombo.getSelectedItem()));
 
-            if (firstName.isEmpty()) {
+            if (emp.getFirstName().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter your first name", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (lastName.isEmpty()) {
+            } else if (emp.getLastName().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter your last name", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (email.isEmpty()) {
+            } else if (emp.getEmail().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter your email", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9\\+_-]+(\\.[A-Za-z0-9\\+_-]+)*@[^-][A-Za-z0-9\\+-]+"
+            } else if (!emp.getEmail().matches("^(?=.{1,64}@)[A-Za-z0-9\\+_-]+(\\.[A-Za-z0-9\\+_-]+)*@[^-][A-Za-z0-9\\+-]+"
                     + "(\\.[A-Za-z0-9\\+-]+)*(\\.[A-Za-z]{2,})$")) {
                 JOptionPane.showMessageDialog(this, "Invalid email", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (mobile.isEmpty()) {
+            } else if (emp.getMobile().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter your mobile", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (!mobile.matches("^07[01245678]{1}[0-9]{7}$")) {
+            } else if (!emp.getMobile().matches("^07[01245678]{1}[0-9]{7}$")) {
                 JOptionPane.showMessageDialog(this, "Please enter valid mobile", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (nic.isEmpty()) {
+            } else if (emp.getNic().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter your nic", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (password.isEmpty()) {
+            } else if (emp.getPassword().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter your password", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (!password.matches("(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$")) {
-                JOptionPane.showMessageDialog(this, "Please enter valid password", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (gender.equals("Select")) {
+            } else if (!emp.getPassword().matches("(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$")) {
+                JOptionPane.showMessageDialog(this, "Please enter more than 8 characters for the password", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else if (emp.getGender().equals("Select")) {
                 JOptionPane.showMessageDialog(this, "Please select a gender", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (type.equals("Select")) {
+            } else if (emp.getType().equals("Select")) {
                 JOptionPane.showMessageDialog(this, "Please select a type", "Warning", JOptionPane.WARNING_MESSAGE);
             } else {
 
-                ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `employee` WHERE `email` = '" + email + "' OR  `nic` = '" + nic + "' OR `mobile`='" + mobile + "'");
+                ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `employee` WHERE `email` = '" + emp.getEmail() + "' OR  `nic` = '" + emp.getNic() + "' OR `mobile`='" + emp.getMobile() + "'");
 
                 if (resultSet.next()) {
                     JOptionPane.showMessageDialog(this, "This user already registered", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -474,8 +488,9 @@ public class EmployeeRegistration extends javax.swing.JFrame {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                     MySQL.executeIUD("INSERT INTO `employee`(`email`,`id`,`first_name`,`last_name`,`mobile`,`nic`,`password`,`registered_date`,`employee_type_id`,`gender_id`)"
-                            + "VALUES('" + email + "','" + cm + "" + id + "','" + firstName + "','" + lastName + "','" + mobile + "','" + nic + "','" + password + "',"
-                            + "'" + sdf.format(date) + "','" + employeeTypeMap.get(type) + "','" + genderMap.get(gender) + "')");
+                            + "VALUES('" + emp.getEmail() + "','" + cm + "" + id + "','" + emp.getFirstName() + "','" + emp.getLastName() + "','" + emp.getMobile() + "',"
+                            + "'" + emp.getNic() + "','" + emp.getPassword() + "',"
+                            + "'" + sdf.format(date) + "','" + employeeTypeMap.get(emp.getType()) + "','" + genderMap.get(emp.getGender()) + "')");
 
                     loadEmployee();
                     reset();
@@ -492,7 +507,13 @@ public class EmployeeRegistration extends javax.swing.JFrame {
 
     private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
         reset();
+
     }//GEN-LAST:event_clearBtnActionPerformed
+
+    
+    
+    
+    
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
         String fname = firstNameField.getText();
@@ -524,6 +545,8 @@ public class EmployeeRegistration extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please select a type", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
 
+            
+            
             try {
 
                 ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `employee` WHERE `nic` = '" + nic + "' OR `mobile`='" + mobile + "' OR `email`='" + email + "'");
@@ -563,6 +586,8 @@ public class EmployeeRegistration extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
 
+        updateBtn.setEnabled(true);
+        registerBtn.setEnabled(false);
         int row = jTable1.getSelectedRow();
 
         String id = String.valueOf(jTable1.getValueAt(row, 0));
@@ -649,6 +674,13 @@ public class EmployeeRegistration extends javax.swing.JFrame {
             }
         });
 
+        typeCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                registerBtn.grabFocus();
+            }
+        });
+
 //        if (evt.getKeyCode() == 13) {
 //            lastNameField.grabFocus();
 //        }
@@ -670,6 +702,10 @@ public class EmployeeRegistration extends javax.swing.JFrame {
     private void nicFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nicFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nicFieldActionPerformed
+
+    private void firstNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameFieldActionPerformed
+
+    }//GEN-LAST:event_firstNameFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -727,6 +763,8 @@ public class EmployeeRegistration extends javax.swing.JFrame {
         typeCombo.setSelectedIndex(0);
 
         firstNameField.grabFocus();
+        registerBtn.setEnabled(true);
+        updateBtn.setEnabled(false);
     }
 
 }

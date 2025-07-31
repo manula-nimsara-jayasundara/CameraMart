@@ -6,6 +6,8 @@ package gui;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -21,6 +23,10 @@ public class Splash extends javax.swing.JFrame {
     public Splash() {
         initComponents();
         loadingAnimation();
+
+        ImageIcon logo = new ImageIcon("C:\\My\\Institute\\SAD\\sadProjects\\Camera_Mart\\src\\images\\cm logo.png");
+        this.setIconImage(logo.getImage());
+
     }
 
     private void loadingAnimation() {
@@ -30,17 +36,17 @@ public class Splash extends javax.swing.JFrame {
                 for (int i = 0; i <= 100; i++) {
                     jProgressBar1.setValue(i);
                     jLabel2.setText("Loading Data " + i + "%");
-                    if (i == 20) {
+                    if (i >= 20 & i < 30) {
                         jLabel2.setText("Please Wait!");
-                    } else if (i == 30) {
+                    } else if (i >= 30 & i < 45) {
                         jLabel2.setText("Libries Loading!");
-                    } else if (i == 45) {
+                    } else if (i >= 45 & i < 70) {
                         jLabel2.setText("Create Database Connection!");
-                    } else if (i == 70) {
+                    } else if (i >= 70 & i < 88) {
                         jLabel2.setText("UI Generated Successfully");
-                    } else if (i == 88) {
+                    } else if (i >= 88 & i < 98) {
                         jLabel2.setText("Database Connection Successfully Created!");
-                    } else if (i == 98) {
+                    } else if (i >= 98 & i < 100) {
                         jLabel2.setText("Done");
                     }
 

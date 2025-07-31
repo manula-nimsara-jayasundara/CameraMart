@@ -7,6 +7,7 @@ package gui;
 import com.mysql.cj.xdevapi.Result;
 import java.sql.ResultSet;
 import java.util.Vector;
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 import model.MySQL;
 
@@ -34,6 +35,8 @@ public class Products extends javax.swing.JFrame {
     public Products() {
         initComponents();
         products();
+        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
+        this.setIconImage(logo.getImage());
     }
 
     private void products() {

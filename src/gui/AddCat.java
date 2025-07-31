@@ -4,6 +4,7 @@
  */
 package gui;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import model.MySQL;
 
@@ -19,6 +20,8 @@ public class AddCat extends javax.swing.JDialog {
     public AddCat(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
+        this.setIconImage(logo.getImage());
     }
 
     /**

@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -60,6 +61,9 @@ public class AddStocks extends javax.swing.JFrame {
         upStkBtn.setEnabled(false);
 
         this.setExtendedState(MAXIMIZED_BOTH);
+        
+        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
+        this.setIconImage(logo.getImage());
     }
 
     String sId = String.valueOf(System.currentTimeMillis());

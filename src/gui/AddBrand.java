@@ -4,6 +4,7 @@
  */
 package gui;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import model.MySQL;
 
@@ -22,6 +23,8 @@ public class AddBrand extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         as = (AddStocks) parent;
+        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
+        this.setIconImage(logo.getImage());
     }
 
     /**

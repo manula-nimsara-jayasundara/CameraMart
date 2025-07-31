@@ -7,6 +7,7 @@ package gui;
 import javax.swing.JOptionPane;
 import model.MySQL;
 import java.sql.ResultSet;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -20,6 +21,8 @@ public class RegisterCompany extends javax.swing.JDialog {
     public RegisterCompany(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
+        this.setIconImage(logo.getImage());
     }
 
     /**

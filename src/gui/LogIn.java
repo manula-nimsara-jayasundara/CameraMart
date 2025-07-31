@@ -67,11 +67,11 @@ public class LogIn extends javax.swing.JFrame {
         initComponents();
         init();
         icon();
+        
     }
 
     public void icon() {
-        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
-//        ImageIcon logo = new ImageIcon(getClass().getClassLoader().getResource("camera.png"));
+        ImageIcon logo = new ImageIcon("C:\\My\\Institute\\SAD\\sadProjects\\Camera_Mart\\src\\images\\cm logo.png");
         this.setIconImage(logo.getImage());
     }
 
@@ -260,7 +260,7 @@ public class LogIn extends javax.swing.JFrame {
                 + "(\\.[A-Za-z0-9\\+-]+)*(\\.[A-Za-z]{2,})$")) {
 
             JOptionPane.showMessageDialog(this, "Invalid email", "Warning", JOptionPane.WARNING_MESSAGE);
-//            
+            
 
         } else if (password.isEmpty()) {
 

@@ -8,6 +8,7 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import model.MySQL;
 import java.sql.ResultSet;
 import java.util.Vector;
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,6 +31,8 @@ public class Stock extends javax.swing.JFrame {
         
         initComponents();
         loadStock();
+        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
+        this.setIconImage(logo.getImage());
     }
 
     private void loadStock() {

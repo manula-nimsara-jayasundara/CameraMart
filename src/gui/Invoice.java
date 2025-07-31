@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -45,6 +46,8 @@ public class Invoice extends javax.swing.JFrame {
         loadPaymentMeths();
 //        checkTotField();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
+        this.setIconImage(logo.getImage());
     }
 
     double total = 0;
@@ -131,7 +134,7 @@ public class Invoice extends javax.swing.JFrame {
 
     private void checkTotField() {
         try {
-        double tot = Double.valueOf(totField.getText());
+            double tot = Double.valueOf(totField.getText());
 
             if (tot <= 0) {
                 discField.setEnabled(false);
@@ -822,6 +825,8 @@ public class Invoice extends javax.swing.JFrame {
 
 //                    MySQL.executeIUD("UPDATE `invoice` SET `paid_amount`='" + payment + "',`discount`='" + discount + "' "
 //                            + "WHERE `invo`='" + invoice_id + "'");
+                    
+
                     MySQL.executeIUD("UPDATE `invoice` SET "
                             + "`id`='" + invoice_id + "',`date_time`='" + addedDate_time + "',`paid_amount`='" + total + "',`discount`='" + discount + "',"
                             + "`payment_method_id`='" + paymentMethodsMap.get(payMethod) + "',`customer_mobile`='" + cusMobile + "',`employee_email`='" + empEmail + "'");

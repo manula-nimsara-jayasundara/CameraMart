@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
@@ -38,6 +39,12 @@ public class Address extends javax.swing.JDialog {
         this.email = email;
         loadAddress();
         loadCities();
+        
+        AddresssUpBtn.setEnabled(false);
+        addressReBtn.setEnabled(false);
+        
+        ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
+        this.setIconImage(logo.getImage());
     }
 
     public void loadAddress() {
@@ -181,6 +188,16 @@ public class Address extends javax.swing.JDialog {
         });
 
         cityCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cityCombo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cityComboMouseClicked(evt);
+            }
+        });
+        cityCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cityComboActionPerformed(evt);
+            }
+        });
 
         addressAddBtn.setBackground(new java.awt.Color(0, 102, 204));
         addressAddBtn.setFont(new java.awt.Font("Quicksand", 1, 14)); // NOI18N
@@ -373,7 +390,9 @@ public class Address extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Please enter Address line2", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (city.equals("Select")) {
             JOptionPane.showMessageDialog(this, "Please select a city", "Warning", JOptionPane.WARNING_MESSAGE);
+            
         } else {
+            
             try {
 
 //                ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `employee` WHERE `email`='" + this.email + "'");
@@ -411,6 +430,9 @@ public class Address extends javax.swing.JDialog {
 
     private void addressTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addressTableMouseClicked
         int row = addressTable.getSelectedRow();
+        AddresssUpBtn.setEnabled(true);
+        addressReBtn.setEnabled(true);
+        addressAddBtn.setEnabled(false);
 
         aLine1.setText(String.valueOf(addressTable.getValueAt(row, 1)));
         aLine2.setText(String.valueOf(addressTable.getValueAt(row, 2)));
@@ -455,6 +477,14 @@ public class Address extends javax.swing.JDialog {
         }
 
     }//GEN-LAST:event_addressReBtnActionPerformed
+
+    private void cityComboMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cityComboMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cityComboMouseClicked
+
+    private void cityComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cityComboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cityComboActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
