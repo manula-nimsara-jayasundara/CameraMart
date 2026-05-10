@@ -9,10 +9,24 @@ package model;
  * @author Manula
  */
 public class User {
+
+    private static User instance;
+
     private String employeeEmail;
     private String employeeName;
     private String password;
     private String jobRole;
+
+    public User() {
+
+    }
+
+//    private static User getInstance() {
+//        if (instance == null) {
+//            instance = new User();
+//        }
+//        return instance;
+//    }
 
     /**
      * @return the employeeEmail
@@ -69,4 +83,8 @@ public class User {
     public void setJobRole(String jobRole) {
         this.jobRole = jobRole;
     }
+
+//    public void logOut() {
+//        instance = null;
+//    }
 }

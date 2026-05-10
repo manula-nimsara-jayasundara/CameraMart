@@ -32,6 +32,15 @@ import raven.toast.ToastClientProperties;
 public class LogIn extends javax.swing.JFrame {
 
     public static String employeeName;
+    public static LogIn instance;
+
+    public static void showLogin() {
+        if (instance == null) {
+            instance = new LogIn();
+        }
+        instance.setVisible(true);
+        instance.toFront();
+    }
 
     ToastNotificationPanel toastNotificationPanel = new ToastNotificationPanel();
 
@@ -59,7 +68,6 @@ public class LogIn extends javax.swing.JFrame {
         return employeeJob;
     }
 
-    
     /**
      * Creates new form LogIn
      */
@@ -67,7 +75,7 @@ public class LogIn extends javax.swing.JFrame {
         initComponents();
         init();
         icon();
-        
+
     }
 
     public void icon() {
@@ -255,12 +263,11 @@ public class LogIn extends javax.swing.JFrame {
 
         if (email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter your email", "Warning", JOptionPane.WARNING_MESSAGE);
-            
+
         } else if (!email.matches("^(?=.{1,64}@)[A-Za-z0-9\\+_-]+(\\.[A-Za-z0-9\\+_-]+)*@[^-][A-Za-z0-9\\+-]+"
                 + "(\\.[A-Za-z0-9\\+-]+)*(\\.[A-Za-z]{2,})$")) {
 
             JOptionPane.showMessageDialog(this, "Invalid email", "Warning", JOptionPane.WARNING_MESSAGE);
-            
 
         } else if (password.isEmpty()) {
 
@@ -276,7 +283,7 @@ public class LogIn extends javax.swing.JFrame {
 
                 if (resultSet.next()) {
 
-                    User user=new User();
+                    User user = new User();
                     String fName = resultSet.getString("first_name");
                     String lName = resultSet.getString("last_name");
                     String empName = fName + " " + lName;
@@ -288,7 +295,7 @@ public class LogIn extends javax.swing.JFrame {
 
                     setEmployeeEmail(email);
                     setEmployeeName(empName);
-                    
+
                     user.setEmployeeEmail(email);
                     user.setEmployeeName(empName);
                     user.setPassword(password);

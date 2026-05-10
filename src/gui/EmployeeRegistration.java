@@ -32,6 +32,17 @@ public class EmployeeRegistration extends javax.swing.JFrame {
     public static HashMap<String, String> genderMap = new HashMap<>();
     public static HashMap<String, String> employeeTypeMap = new HashMap<>();
 
+    public static EmployeeRegistration employeeInstance;
+    public static LogIn loginInstance;
+
+    public void showEmployeeRegistration() {
+        if (employeeInstance == null) {
+            employeeInstance = new EmployeeRegistration();
+        }
+        employeeInstance.setVisible(true);
+        employeeInstance.toFront();
+    }
+
     /**
      * Creates new form EmployeeRegistration
      */
@@ -41,11 +52,11 @@ public class EmployeeRegistration extends javax.swing.JFrame {
         loadType();
         loadEmployee();
         reset();
-        
+
         init();
 
         updateBtn.setEnabled(false);
-        
+
         ImageIcon logo = new ImageIcon("C:\\Users\\Manula\\Documents\\NetBeansProjects\\Camera_Mart\\src\\images\\camera.png");
         this.setIconImage(logo.getImage());
     }
@@ -123,7 +134,7 @@ public class EmployeeRegistration extends javax.swing.JFrame {
 
                 model.addRow(vector);
             }
-registerBtn.setEnabled(true);
+            registerBtn.setEnabled(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -160,6 +171,7 @@ registerBtn.setEnabled(true);
         typeCombo = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         nicField = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -265,12 +277,23 @@ registerBtn.setEnabled(true);
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(51, 51, 51));
+        jButton2.setFont(new java.awt.Font("JetBrains Mono ExtraBold", 1, 18)); // NOI18N
+        jButton2.setText("<");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(120, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(jPanel2Layout.createSequentialGroup()
@@ -311,7 +334,7 @@ registerBtn.setEnabled(true);
                         .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)
                         .addComponent(clearBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addContainerGap(146, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -321,7 +344,8 @@ registerBtn.setEnabled(true);
                     .addComponent(jLabel2)
                     .addComponent(firstNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(lastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lastNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -346,7 +370,7 @@ registerBtn.setEnabled(true);
                     .addComponent(typeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(registerBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                    .addComponent(registerBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(updateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(clearBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -510,10 +534,6 @@ registerBtn.setEnabled(true);
 
     }//GEN-LAST:event_clearBtnActionPerformed
 
-    
-    
-    
-    
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
         String fname = firstNameField.getText();
@@ -545,8 +565,6 @@ registerBtn.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Please select a type", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
 
-            
-            
             try {
 
                 ResultSet resultSet = MySQL.executeSearch("SELECT * FROM `employee` WHERE `nic` = '" + nic + "' OR `mobile`='" + mobile + "' OR `email`='" + email + "'");
@@ -707,26 +725,46 @@ registerBtn.setEnabled(true);
 
     }//GEN-LAST:event_firstNameFieldActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        EmployeeRegistration employeeRegistration = new EmployeeRegistration();
+
+        if (loginInstance == null) {
+            loginInstance = new LogIn();
+        } else {
+            loginInstance.setVisible(true);
+        }
+
+        if (employeeInstance == null) {
+            employeeInstance = new EmployeeRegistration();
+        } else {
+            employeeInstance.setVisible(false);
+        }
+
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        FlatMacDarkLaf.setup();
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EmployeeRegistration().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        FlatMacDarkLaf.setup();
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new EmployeeRegistration().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearBtn;
     private javax.swing.JTextField emailField;
     private javax.swing.JTextField firstNameField;
     private javax.swing.JComboBox<String> genderCombo;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
